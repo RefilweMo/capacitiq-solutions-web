@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as PublicTemplatesRouteImport } from './routes/_public.templates'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
 import { Route as PublicPortfolioRouteImport } from './routes/_public.portfolio'
@@ -42,6 +43,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
 } as any)
 const PublicTemplatesRoute = PublicTemplatesRouteImport.update({
   id: '/templates',
@@ -96,7 +102,7 @@ const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -105,12 +111,13 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
   '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
@@ -127,7 +135,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/careers': typeof PublicCareersRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/_public/portfolio': typeof PublicPortfolioRoute
   '/_public/services': typeof PublicServicesRoute
   '/_public/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/templates/$id': typeof PublicTemplatesIdRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/templates'
+    | '/admin/login'
     | '/blog/$slug'
     | '/templates/$id'
     | '/templates/checkout'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/templates'
+    | '/admin/login'
     | '/'
     | '/blog/$slug'
     | '/templates/$id'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/_public/portfolio'
     | '/_public/services'
     | '/_public/templates'
+    | '/admin/login'
     | '/_public/'
     | '/_public/blog/$slug'
     | '/_public/templates/$id'
@@ -192,7 +204,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -225,6 +237,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/_public/templates': {
       id: '/_public/templates'
@@ -350,9 +369,19 @@ const PublicRouteChildren: PublicRouteChildren = {
 const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
+interface AdminRouteChildren {
+  AdminLoginRoute: typeof AdminLoginRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLoginRoute: AdminLoginRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
