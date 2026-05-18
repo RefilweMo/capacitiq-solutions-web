@@ -18,6 +18,7 @@ import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCompanyRouteImport } from './routes/_public.company'
 import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
+import { Route as PublicTemplatesIdRouteImport } from './routes/_public.templates.$id'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 
 const PublicRoute = PublicRouteImport.update({
@@ -64,6 +65,11 @@ const PublicBlogRoute = PublicBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicTemplatesIdRoute = PublicTemplatesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicTemplatesRoute,
+} as any)
 const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -78,8 +84,9 @@ export interface FileRoutesByFullPath {
   '/contact': typeof PublicContactRoute
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
-  '/templates': typeof PublicTemplatesRoute
+  '/templates': typeof PublicTemplatesRouteWithChildren
   '/blog/$slug': typeof PublicBlogSlugRoute
+  '/templates/$id': typeof PublicTemplatesIdRoute
 }
 export interface FileRoutesByTo {
   '/blog': typeof PublicBlogRouteWithChildren
@@ -88,9 +95,10 @@ export interface FileRoutesByTo {
   '/contact': typeof PublicContactRoute
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
-  '/templates': typeof PublicTemplatesRoute
+  '/templates': typeof PublicTemplatesRouteWithChildren
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
+  '/templates/$id': typeof PublicTemplatesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,9 +109,10 @@ export interface FileRoutesById {
   '/_public/contact': typeof PublicContactRoute
   '/_public/portfolio': typeof PublicPortfolioRoute
   '/_public/services': typeof PublicServicesRoute
-  '/_public/templates': typeof PublicTemplatesRoute
+  '/_public/templates': typeof PublicTemplatesRouteWithChildren
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
+  '/_public/templates/$id': typeof PublicTemplatesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/templates'
     | '/blog/$slug'
+    | '/templates/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/blog'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/'
     | '/blog/$slug'
+    | '/templates/$id'
   id:
     | '__root__'
     | '/_public'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/_public/templates'
     | '/_public/'
     | '/_public/blog/$slug'
+    | '/_public/templates/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicBlogRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/templates/$id': {
+      id: '/_public/templates/$id'
+      path: '/$id'
+      fullPath: '/templates/$id'
+      preLoaderRoute: typeof PublicTemplatesIdRouteImport
+      parentRoute: typeof PublicTemplatesRoute
+    }
     '/_public/blog/$slug': {
       id: '/_public/blog/$slug'
       path: '/$slug'
@@ -233,6 +252,18 @@ const PublicBlogRouteWithChildren = PublicBlogRoute._addFileChildren(
   PublicBlogRouteChildren,
 )
 
+interface PublicTemplatesRouteChildren {
+  PublicTemplatesIdRoute: typeof PublicTemplatesIdRoute
+}
+
+const PublicTemplatesRouteChildren: PublicTemplatesRouteChildren = {
+  PublicTemplatesIdRoute: PublicTemplatesIdRoute,
+}
+
+const PublicTemplatesRouteWithChildren = PublicTemplatesRoute._addFileChildren(
+  PublicTemplatesRouteChildren,
+)
+
 interface PublicRouteChildren {
   PublicBlogRoute: typeof PublicBlogRouteWithChildren
   PublicCareersRoute: typeof PublicCareersRoute
@@ -240,7 +271,7 @@ interface PublicRouteChildren {
   PublicContactRoute: typeof PublicContactRoute
   PublicPortfolioRoute: typeof PublicPortfolioRoute
   PublicServicesRoute: typeof PublicServicesRoute
-  PublicTemplatesRoute: typeof PublicTemplatesRoute
+  PublicTemplatesRoute: typeof PublicTemplatesRouteWithChildren
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
@@ -251,7 +282,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicContactRoute: PublicContactRoute,
   PublicPortfolioRoute: PublicPortfolioRoute,
   PublicServicesRoute: PublicServicesRoute,
-  PublicTemplatesRoute: PublicTemplatesRoute,
+  PublicTemplatesRoute: PublicTemplatesRouteWithChildren,
   PublicIndexRoute: PublicIndexRoute,
 }
 
