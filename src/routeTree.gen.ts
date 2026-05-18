@@ -9,50 +9,399 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as PublicTemplatesRouteImport } from './routes/_public.templates'
+import { Route as PublicServicesRouteImport } from './routes/_public.services'
+import { Route as PublicPortfolioRouteImport } from './routes/_public.portfolio'
+import { Route as PublicContactRouteImport } from './routes/_public.contact'
+import { Route as PublicCompanyRouteImport } from './routes/_public.company'
+import { Route as PublicCareersRouteImport } from './routes/_public.careers'
+import { Route as PublicBlogRouteImport } from './routes/_public.blog'
+import { Route as PublicTemplatesCheckoutRouteImport } from './routes/_public.templates.checkout'
+import { Route as PublicTemplatesIdRouteImport } from './routes/_public.templates.$id'
+import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 
-const IndexRoute = IndexRouteImport.update({
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AdminRoute,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PublicTemplatesRoute = PublicTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicServicesRoute = PublicServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPortfolioRoute = PublicPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCompanyRoute = PublicCompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCareersRoute = PublicCareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogRoute = PublicBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTemplatesCheckoutRoute = PublicTemplatesCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => PublicTemplatesRoute,
+} as any)
+const PublicTemplatesIdRoute = PublicTemplatesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicTemplatesRoute,
+} as any)
+const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PublicBlogRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog': typeof PublicBlogRouteWithChildren
+  '/careers': typeof PublicCareersRoute
+  '/company': typeof PublicCompanyRoute
+  '/contact': typeof PublicContactRoute
+  '/portfolio': typeof PublicPortfolioRoute
+  '/services': typeof PublicServicesRoute
+  '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
+  '/templates/$id': typeof PublicTemplatesIdRoute
+  '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog': typeof PublicBlogRouteWithChildren
+  '/careers': typeof PublicCareersRoute
+  '/company': typeof PublicCompanyRoute
+  '/contact': typeof PublicContactRoute
+  '/portfolio': typeof PublicPortfolioRoute
+  '/services': typeof PublicServicesRoute
+  '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/': typeof PublicIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
+  '/templates/$id': typeof PublicTemplatesIdRoute
+  '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_public': typeof PublicRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_public/blog': typeof PublicBlogRouteWithChildren
+  '/_public/careers': typeof PublicCareersRoute
+  '/_public/company': typeof PublicCompanyRoute
+  '/_public/contact': typeof PublicContactRoute
+  '/_public/portfolio': typeof PublicPortfolioRoute
+  '/_public/services': typeof PublicServicesRoute
+  '/_public/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/_public/': typeof PublicIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/_public/blog/$slug': typeof PublicBlogSlugRoute
+  '/_public/templates/$id': typeof PublicTemplatesIdRoute
+  '/_public/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/sitemap.xml'
+    | '/blog'
+    | '/careers'
+    | '/company'
+    | '/contact'
+    | '/portfolio'
+    | '/services'
+    | '/templates'
+    | '/admin/login'
+    | '/admin/'
+    | '/blog/$slug'
+    | '/templates/$id'
+    | '/templates/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/sitemap.xml'
+    | '/blog'
+    | '/careers'
+    | '/company'
+    | '/contact'
+    | '/portfolio'
+    | '/services'
+    | '/templates'
+    | '/admin/login'
+    | '/'
+    | '/admin'
+    | '/blog/$slug'
+    | '/templates/$id'
+    | '/templates/checkout'
+  id:
+    | '__root__'
+    | '/_public'
+    | '/admin'
+    | '/sitemap.xml'
+    | '/_public/blog'
+    | '/_public/careers'
+    | '/_public/company'
+    | '/_public/contact'
+    | '/_public/portfolio'
+    | '/_public/services'
+    | '/_public/templates'
+    | '/admin/login'
+    | '/_public/'
+    | '/admin/'
+    | '/_public/blog/$slug'
+    | '/_public/templates/$id'
+    | '/_public/templates/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  PublicRoute: typeof PublicRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_public/templates': {
+      id: '/_public/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof PublicTemplatesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/services': {
+      id: '/_public/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof PublicServicesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/portfolio': {
+      id: '/_public/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PublicPortfolioRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/company': {
+      id: '/_public/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof PublicCompanyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/careers': {
+      id: '/_public/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof PublicCareersRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog': {
+      id: '/_public/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof PublicBlogRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/templates/checkout': {
+      id: '/_public/templates/checkout'
+      path: '/checkout'
+      fullPath: '/templates/checkout'
+      preLoaderRoute: typeof PublicTemplatesCheckoutRouteImport
+      parentRoute: typeof PublicTemplatesRoute
+    }
+    '/_public/templates/$id': {
+      id: '/_public/templates/$id'
+      path: '/$id'
+      fullPath: '/templates/$id'
+      preLoaderRoute: typeof PublicTemplatesIdRouteImport
+      parentRoute: typeof PublicTemplatesRoute
+    }
+    '/_public/blog/$slug': {
+      id: '/_public/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof PublicBlogSlugRouteImport
+      parentRoute: typeof PublicBlogRoute
     }
   }
 }
 
+interface PublicBlogRouteChildren {
+  PublicBlogSlugRoute: typeof PublicBlogSlugRoute
+}
+
+const PublicBlogRouteChildren: PublicBlogRouteChildren = {
+  PublicBlogSlugRoute: PublicBlogSlugRoute,
+}
+
+const PublicBlogRouteWithChildren = PublicBlogRoute._addFileChildren(
+  PublicBlogRouteChildren,
+)
+
+interface PublicTemplatesRouteChildren {
+  PublicTemplatesIdRoute: typeof PublicTemplatesIdRoute
+  PublicTemplatesCheckoutRoute: typeof PublicTemplatesCheckoutRoute
+}
+
+const PublicTemplatesRouteChildren: PublicTemplatesRouteChildren = {
+  PublicTemplatesIdRoute: PublicTemplatesIdRoute,
+  PublicTemplatesCheckoutRoute: PublicTemplatesCheckoutRoute,
+}
+
+const PublicTemplatesRouteWithChildren = PublicTemplatesRoute._addFileChildren(
+  PublicTemplatesRouteChildren,
+)
+
+interface PublicRouteChildren {
+  PublicBlogRoute: typeof PublicBlogRouteWithChildren
+  PublicCareersRoute: typeof PublicCareersRoute
+  PublicCompanyRoute: typeof PublicCompanyRoute
+  PublicContactRoute: typeof PublicContactRoute
+  PublicPortfolioRoute: typeof PublicPortfolioRoute
+  PublicServicesRoute: typeof PublicServicesRoute
+  PublicTemplatesRoute: typeof PublicTemplatesRouteWithChildren
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicBlogRoute: PublicBlogRouteWithChildren,
+  PublicCareersRoute: PublicCareersRoute,
+  PublicCompanyRoute: PublicCompanyRoute,
+  PublicContactRoute: PublicContactRoute,
+  PublicPortfolioRoute: PublicPortfolioRoute,
+  PublicServicesRoute: PublicServicesRoute,
+  PublicTemplatesRoute: PublicTemplatesRouteWithChildren,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
+interface AdminRouteChildren {
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  PublicRoute: PublicRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
