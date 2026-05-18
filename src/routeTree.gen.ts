@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
+import { Route as PublicPortfolioRouteImport } from './routes/_public.portfolio'
 import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCompanyRouteImport } from './routes/_public.company'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
@@ -29,6 +30,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
 const PublicServicesRoute = PublicServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPortfolioRoute = PublicPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicContactRoute = PublicContactRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof PublicBlogRouteWithChildren
   '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
+  '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
 }
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/blog': typeof PublicBlogRouteWithChildren
   '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
+  '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/company': typeof PublicCompanyRoute
   '/_public/contact': typeof PublicContactRoute
+  '/_public/portfolio': typeof PublicPortfolioRoute
   '/_public/services': typeof PublicServicesRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
@@ -85,16 +94,25 @@ export interface FileRouteTypes {
     | '/blog'
     | '/company'
     | '/contact'
+    | '/portfolio'
     | '/services'
     | '/blog/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/blog' | '/company' | '/contact' | '/services' | '/' | '/blog/$slug'
+  to:
+    | '/blog'
+    | '/company'
+    | '/contact'
+    | '/portfolio'
+    | '/services'
+    | '/'
+    | '/blog/$slug'
   id:
     | '__root__'
     | '/_public'
     | '/_public/blog'
     | '/_public/company'
     | '/_public/contact'
+    | '/_public/portfolio'
     | '/_public/services'
     | '/_public/'
     | '/_public/blog/$slug'
@@ -125,6 +143,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof PublicServicesRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/portfolio': {
+      id: '/_public/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PublicPortfolioRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/contact': {
@@ -174,6 +199,7 @@ interface PublicRouteChildren {
   PublicBlogRoute: typeof PublicBlogRouteWithChildren
   PublicCompanyRoute: typeof PublicCompanyRoute
   PublicContactRoute: typeof PublicContactRoute
+  PublicPortfolioRoute: typeof PublicPortfolioRoute
   PublicServicesRoute: typeof PublicServicesRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
@@ -182,6 +208,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicBlogRoute: PublicBlogRouteWithChildren,
   PublicCompanyRoute: PublicCompanyRoute,
   PublicContactRoute: PublicContactRoute,
+  PublicPortfolioRoute: PublicPortfolioRoute,
   PublicServicesRoute: PublicServicesRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
