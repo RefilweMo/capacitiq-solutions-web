@@ -49,33 +49,11 @@ function CareersPage() {
         )}
         <div className="space-y-4">
           {data?.map((r) => (
-            <NeuAccordion
+            <RoleAccordion
               key={r.id}
-              title={
-                <div className="flex flex-col text-left">
-                  <span className="font-semibold">{r.title}</span>
-                  <span className="text-xs text-[var(--ink-soft)] mt-1">{r.location} · {r.employment_type}</span>
-                </div>
-              }
-            >
-              {r.summary && <p className="text-sm text-[var(--ink-soft)] mb-4">{r.summary}</p>}
-              {r.description && <div className="text-sm whitespace-pre-wrap mb-4">{r.description}</div>}
-              {r.requirements && (
-                <>
-                  <h4 className="font-semibold mt-4 mb-2 text-sm">Requirements</h4>
-                  <div className="text-sm whitespace-pre-wrap text-[var(--ink-soft)]">{r.requirements}</div>
-                </>
-              )}
-              <div className="mt-6 flex flex-wrap gap-3">
-                <NeuButton
-                  variant="primary"
-                  size="md"
-                  onClick={() => (r.title.toLowerCase().includes("spotter") ? openSpotter() : setApplyRole(r.title))}
-                >
-                  Apply for this role
-                </NeuButton>
-              </div>
-            </NeuAccordion>
+              r={r}
+              onApply={() => (r.title.toLowerCase().includes("spotter") ? openSpotter() : setApplyRole(r.title))}
+            />
           ))}
         </div>
       </section>
