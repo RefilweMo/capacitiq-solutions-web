@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import * as React from "react";
 import { listOpenCareers } from "@/lib/content.functions";
-import { NeuAccordion } from "@/components/neu/NeuAccordion";
+import { Plus, Minus } from "lucide-react";
 import { NeuButton } from "@/components/neu/NeuButton";
 import { NeuModal } from "@/components/neu/NeuModal";
 import { NeuInput, NeuTextarea, NeuField } from "@/components/neu/NeuInput";
