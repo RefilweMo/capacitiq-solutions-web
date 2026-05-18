@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_public/contact")({
 function ContactPage() {
   const submit = useServerFn(sendContactEmail);
   const mut = useMutation({
-    mutationFn: (data: Parameters<typeof submit>[0]["data"]) => submit({ data }),
+    mutationFn: (data: { name: string; email: string; phone: string; company: string; message: string }) => submit({ data }),
   });
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
