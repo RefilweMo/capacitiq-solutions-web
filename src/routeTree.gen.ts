@@ -18,6 +18,7 @@ import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCompanyRouteImport } from './routes/_public.company'
 import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
+import { Route as PublicTemplatesCheckoutRouteImport } from './routes/_public.templates.checkout'
 import { Route as PublicTemplatesIdRouteImport } from './routes/_public.templates.$id'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 
@@ -65,6 +66,11 @@ const PublicBlogRoute = PublicBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicTemplatesCheckoutRoute = PublicTemplatesCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => PublicTemplatesRoute,
+} as any)
 const PublicTemplatesIdRoute = PublicTemplatesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof PublicTemplatesRouteWithChildren
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
+  '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesByTo {
   '/blog': typeof PublicBlogRouteWithChildren
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
+  '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/templates/$id': typeof PublicTemplatesIdRoute
+  '/_public/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/blog/$slug'
     | '/templates/$id'
+    | '/templates/checkout'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/blog'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog/$slug'
     | '/templates/$id'
+    | '/templates/checkout'
   id:
     | '__root__'
     | '/_public'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_public/blog/$slug'
     | '/_public/templates/$id'
+    | '/_public/templates/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicBlogRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/templates/checkout': {
+      id: '/_public/templates/checkout'
+      path: '/checkout'
+      fullPath: '/templates/checkout'
+      preLoaderRoute: typeof PublicTemplatesCheckoutRouteImport
+      parentRoute: typeof PublicTemplatesRoute
+    }
     '/_public/templates/$id': {
       id: '/_public/templates/$id'
       path: '/$id'
@@ -254,10 +273,12 @@ const PublicBlogRouteWithChildren = PublicBlogRoute._addFileChildren(
 
 interface PublicTemplatesRouteChildren {
   PublicTemplatesIdRoute: typeof PublicTemplatesIdRoute
+  PublicTemplatesCheckoutRoute: typeof PublicTemplatesCheckoutRoute
 }
 
 const PublicTemplatesRouteChildren: PublicTemplatesRouteChildren = {
   PublicTemplatesIdRoute: PublicTemplatesIdRoute,
+  PublicTemplatesCheckoutRoute: PublicTemplatesCheckoutRoute,
 }
 
 const PublicTemplatesRouteWithChildren = PublicTemplatesRoute._addFileChildren(
