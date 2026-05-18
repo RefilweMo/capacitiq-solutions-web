@@ -51,8 +51,7 @@ export function NeuLinkButton({
   const cls = cn(base, sizes[size], variants[variant], className);
   if (to) {
     return (
-      // @ts-expect-error TanStack Link typed paths
-      <Link to={to} className={cls} {...rest}>
+      <Link to={to as never} className={cls} {...rest}>
         {children}
       </Link>
     );
