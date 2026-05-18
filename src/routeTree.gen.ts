@@ -13,6 +13,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
 import { Route as PublicContactRouteImport } from './routes/_public.contact'
+import { Route as PublicCompanyRouteImport } from './routes/_public.company'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -33,13 +34,20 @@ const PublicContactRoute = PublicContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicCompanyRoute = PublicCompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
+  getParentRoute: () => PublicRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
   '/services': typeof PublicServicesRoute
 }
 export interface FileRoutesByTo {
+  '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
   '/services': typeof PublicServicesRoute
   '/': typeof PublicIndexRoute
@@ -47,18 +55,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
+  '/_public/company': typeof PublicCompanyRoute
   '/_public/contact': typeof PublicContactRoute
   '/_public/services': typeof PublicServicesRoute
   '/_public/': typeof PublicIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contact' | '/services'
+  fullPaths: '/' | '/company' | '/contact' | '/services'
   fileRoutesByTo: FileRoutesByTo
-  to: '/contact' | '/services' | '/'
+  to: '/company' | '/contact' | '/services' | '/'
   id:
     | '__root__'
     | '/_public'
+    | '/_public/company'
     | '/_public/contact'
     | '/_public/services'
     | '/_public/'
@@ -98,16 +108,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicContactRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/company': {
+      id: '/_public/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof PublicCompanyRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
 interface PublicRouteChildren {
+  PublicCompanyRoute: typeof PublicCompanyRoute
   PublicContactRoute: typeof PublicContactRoute
   PublicServicesRoute: typeof PublicServicesRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicCompanyRoute: PublicCompanyRoute,
   PublicContactRoute: PublicContactRoute,
   PublicServicesRoute: PublicServicesRoute,
   PublicIndexRoute: PublicIndexRoute,
@@ -122,3 +141,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
