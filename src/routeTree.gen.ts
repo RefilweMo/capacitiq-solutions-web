@@ -14,6 +14,7 @@ import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
 import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCompanyRouteImport } from './routes/_public.company'
+import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -39,14 +40,21 @@ const PublicCompanyRoute = PublicCompanyRouteImport.update({
   path: '/company',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicBlogRoute = PublicBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => PublicRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/blog': typeof PublicBlogRoute
   '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
   '/services': typeof PublicServicesRoute
 }
 export interface FileRoutesByTo {
+  '/blog': typeof PublicBlogRoute
   '/company': typeof PublicCompanyRoute
   '/contact': typeof PublicContactRoute
   '/services': typeof PublicServicesRoute
@@ -55,6 +63,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
+  '/_public/blog': typeof PublicBlogRoute
   '/_public/company': typeof PublicCompanyRoute
   '/_public/contact': typeof PublicContactRoute
   '/_public/services': typeof PublicServicesRoute
@@ -62,12 +71,13 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/company' | '/contact' | '/services'
+  fullPaths: '/' | '/blog' | '/company' | '/contact' | '/services'
   fileRoutesByTo: FileRoutesByTo
-  to: '/company' | '/contact' | '/services' | '/'
+  to: '/blog' | '/company' | '/contact' | '/services' | '/'
   id:
     | '__root__'
     | '/_public'
+    | '/_public/blog'
     | '/_public/company'
     | '/_public/contact'
     | '/_public/services'
@@ -115,10 +125,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCompanyRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/blog': {
+      id: '/_public/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof PublicBlogRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
 interface PublicRouteChildren {
+  PublicBlogRoute: typeof PublicBlogRoute
   PublicCompanyRoute: typeof PublicCompanyRoute
   PublicContactRoute: typeof PublicContactRoute
   PublicServicesRoute: typeof PublicServicesRoute
@@ -126,6 +144,7 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicBlogRoute: PublicBlogRoute,
   PublicCompanyRoute: PublicCompanyRoute,
   PublicContactRoute: PublicContactRoute,
   PublicServicesRoute: PublicServicesRoute,
@@ -141,3 +160,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
