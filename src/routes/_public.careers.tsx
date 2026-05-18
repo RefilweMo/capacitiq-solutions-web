@@ -63,6 +63,40 @@ function CareersPage() {
   );
 }
 
+type Role = { id: string; title: string; location: string | null; employment_type: string | null; summary: string | null; description: string | null; requirements: string | null };
+
+function RoleAccordion({ r, onApply }: { r: Role; onApply: () => void }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="neu-out rounded-3xl p-2">
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left">
+        <div className="flex flex-col">
+          <span className="font-semibold">{r.title}</span>
+          <span className="text-xs text-[var(--ink-soft)] mt-1">{r.location} · {r.employment_type}</span>
+        </div>
+        <span className="neu-out-sm h-9 w-9 rounded-full flex items-center justify-center text-[var(--brand)] shrink-0">
+          {open ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+        </span>
+      </button>
+      {open && (
+        <div className="px-5 pb-5 pt-2">
+          {r.summary && <p className="text-sm text-[var(--ink-soft)] mb-4">{r.summary}</p>}
+          {r.description && <div className="text-sm whitespace-pre-wrap mb-4">{r.description}</div>}
+          {r.requirements && (
+            <>
+              <h4 className="font-semibold mt-4 mb-2 text-sm">Requirements</h4>
+              <div className="text-sm whitespace-pre-wrap text-[var(--ink-soft)]">{r.requirements}</div>
+            </>
+          )}
+          <div className="mt-6">
+            <NeuButton variant="primary" size="md" onClick={onApply}>Apply for this role</NeuButton>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ApplyModal({ role, onClose }: { role: string | null; onClose: () => void }) {
   const submit = useServerFn(sendCareerApplication);
   const [busy, setBusy] = React.useState(false);
