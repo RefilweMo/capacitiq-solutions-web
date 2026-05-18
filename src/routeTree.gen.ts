@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as PublicTemplatesRouteImport } from './routes/_public.templates'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
 import { Route as PublicPortfolioRouteImport } from './routes/_public.portfolio'
 import { Route as PublicContactRouteImport } from './routes/_public.contact'
@@ -26,6 +27,11 @@ const PublicRoute = PublicRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTemplatesRoute = PublicTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicServicesRoute = PublicServicesRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof PublicContactRoute
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
+  '/templates': typeof PublicTemplatesRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
 }
 export interface FileRoutesByTo {
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/contact': typeof PublicContactRoute
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
+  '/templates': typeof PublicTemplatesRoute
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_public/contact': typeof PublicContactRoute
   '/_public/portfolio': typeof PublicPortfolioRoute
   '/_public/services': typeof PublicServicesRoute
+  '/_public/templates': typeof PublicTemplatesRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
 }
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/portfolio'
     | '/services'
+    | '/templates'
     | '/blog/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/portfolio'
     | '/services'
+    | '/templates'
     | '/'
     | '/blog/$slug'
   id:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/_public/contact'
     | '/_public/portfolio'
     | '/_public/services'
+    | '/_public/templates'
     | '/_public/'
     | '/_public/blog/$slug'
   fileRoutesById: FileRoutesById
@@ -148,6 +160,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/templates': {
+      id: '/_public/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof PublicTemplatesRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/services': {
@@ -221,6 +240,7 @@ interface PublicRouteChildren {
   PublicContactRoute: typeof PublicContactRoute
   PublicPortfolioRoute: typeof PublicPortfolioRoute
   PublicServicesRoute: typeof PublicServicesRoute
+  PublicTemplatesRoute: typeof PublicTemplatesRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
@@ -231,6 +251,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicContactRoute: PublicContactRoute,
   PublicPortfolioRoute: PublicPortfolioRoute,
   PublicServicesRoute: PublicServicesRoute,
+  PublicTemplatesRoute: PublicTemplatesRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
@@ -243,3 +264,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
