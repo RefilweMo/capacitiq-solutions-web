@@ -82,7 +82,7 @@ function AdminLayout() {
           {NAV.map((n) => {
             const active = n.exact ? pathname === n.to : pathname.startsWith(n.to);
             return (
-              <Link key={n.to} to={n.to} className={`neu-pill px-4 py-2 text-xs whitespace-nowrap ${active ? "text-[var(--brand)] font-semibold" : "text-[var(--ink-soft)]"}`}>
+              <Link key={n.to} to={n.to as never} className={`neu-pill px-4 py-2 text-xs whitespace-nowrap ${active ? "text-[var(--brand)] font-semibold" : "text-[var(--ink-soft)]"}`}>
                 {n.label}
               </Link>
             );
