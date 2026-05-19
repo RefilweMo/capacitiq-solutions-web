@@ -15,7 +15,12 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
+import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
+import { Route as AdminPortfolioRouteImport } from './routes/admin.portfolio'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminCareersRouteImport } from './routes/admin.careers'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as PublicTemplatesRouteImport } from './routes/_public.templates'
 import { Route as PublicServicesRouteImport } from './routes/_public.services'
 import { Route as PublicPortfolioRouteImport } from './routes/_public.portfolio'
@@ -56,9 +61,34 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
+  id: '/submissions',
+  path: '/submissions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCareersRoute = AdminCareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => AdminRoute,
 } as any)
 const PublicTemplatesRoute = PublicTemplatesRouteImport.update({
@@ -124,7 +154,12 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/careers': typeof AdminCareersRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
@@ -140,7 +175,12 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PublicPortfolioRoute
   '/services': typeof PublicServicesRoute
   '/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/careers': typeof AdminCareersRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
@@ -160,7 +200,12 @@ export interface FileRoutesById {
   '/_public/portfolio': typeof PublicPortfolioRoute
   '/_public/services': typeof PublicServicesRoute
   '/_public/templates': typeof PublicTemplatesRouteWithChildren
+  '/admin/blog': typeof AdminBlogRoute
+  '/admin/careers': typeof AdminCareersRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/_public/': typeof PublicIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
@@ -181,7 +226,12 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/templates'
+    | '/admin/blog'
+    | '/admin/careers'
     | '/admin/login'
+    | '/admin/portfolio'
+    | '/admin/submissions'
+    | '/admin/templates'
     | '/admin/'
     | '/blog/$slug'
     | '/templates/$id'
@@ -197,7 +247,12 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/templates'
+    | '/admin/blog'
+    | '/admin/careers'
     | '/admin/login'
+    | '/admin/portfolio'
+    | '/admin/submissions'
+    | '/admin/templates'
     | '/'
     | '/admin'
     | '/blog/$slug'
@@ -216,7 +271,12 @@ export interface FileRouteTypes {
     | '/_public/portfolio'
     | '/_public/services'
     | '/_public/templates'
+    | '/admin/blog'
+    | '/admin/careers'
     | '/admin/login'
+    | '/admin/portfolio'
+    | '/admin/submissions'
+    | '/admin/templates'
     | '/_public/'
     | '/admin/'
     | '/_public/blog/$slug'
@@ -275,11 +335,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/portfolio': {
+      id: '/admin/portfolio'
+      path: '/portfolio'
+      fullPath: '/admin/portfolio'
+      preLoaderRoute: typeof AdminPortfolioRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/careers': {
+      id: '/admin/careers'
+      path: '/careers'
+      fullPath: '/admin/careers'
+      preLoaderRoute: typeof AdminCareersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_public/templates': {
@@ -407,12 +502,22 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 interface AdminRouteChildren {
+  AdminBlogRoute: typeof AdminBlogRoute
+  AdminCareersRoute: typeof AdminCareersRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminPortfolioRoute: typeof AdminPortfolioRoute
+  AdminSubmissionsRoute: typeof AdminSubmissionsRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminBlogRoute: AdminBlogRoute,
+  AdminCareersRoute: AdminCareersRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminPortfolioRoute: AdminPortfolioRoute,
+  AdminSubmissionsRoute: AdminSubmissionsRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -427,3 +532,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
