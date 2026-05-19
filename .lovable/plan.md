@@ -1,92 +1,87 @@
-## Capacitiq Website — Final Build Plan (Approved Additions Included)
+## Plan
 
-All decisions locked. Approve to execute.
+### A. Fix admin login and password reset
+- Add "Forgot password?" link on `/admin/login` that triggers password recovery email with redirect to `/reset-password`.
+- Create new public route `/reset-password` to handle recovery deep links and let the admin set a new password (e.g. `Ciq@Admin2026!`).
+- Improve sign-in errors and gate non-admin users with a clear "admin only" message.
+- Verify admin trigger and add a server-side admin bootstrap repair so `admin@capacitiq.co.za` reliably gets the admin role.
+- Configure auth: keep email confirmations on, enable leaked-password protection.
 
-### Confirmed decisions
-- **CMS storage**: Lovable Cloud (Supabase) tables for blog, portfolio, templates, careers, submissions.
-- **Resend**: Lovable Cloud enabled; `RESEND_API_KEY` stored as a server secret; emails sent from server functions (from `noreply@capacitiq.co.za` — domain must be verified in Resend).
-- **Admin password**: `Ciq@Admin2026!` seeded for `admin@capacitiq.co.za` and `rmolapisi@capacitiq.co.za`; changeable via Settings.
-- **Socials**: LinkedIn, TikTok, Instagram only. No Facebook / X / YouTube anywhere.
+### B. Build full admin CRUD editors
+Replace dashboard placeholders with real editors backed by the existing server functions:
+- `/admin/blog` — list + create/edit/delete, publish toggle, slug/title/excerpt/content/cover/author/tags.
+- `/admin/portfolio` — list + create/edit/delete, publish toggle, title/client/category/description/cover/url/tags/order.
+- `/admin/templates` — list + create/edit/delete, active toggle, name/description/price/cover/category/private Canva link/order.
+- `/admin/careers` — list + create/edit/delete, open/close toggle, title/location/type/summary/description/requirements/order.
+- `/admin/submissions` — full submissions browser.
+- Sidebar/admin nav linking all sections; signed-out auto-redirect to `/admin/login`.
 
-### New additions (from latest message)
+### C. Apply all critical edits from the latest spec doc
 
-1. **Single Spotter modal** — One `<SpotterModal />` component lives at the root of the public layout. The homepage "Spotters" banner CTA and the Sales Spotter career listing "Apply" button both call the same `openSpotter()` from a small context. One component, two triggers, identical fields, identical submission handler.
+Brand and chrome (every page):
+- Background `#e8edf0`, primary `#0b4650`, accent `#e6ff2b`. No black, no white card backgrounds, muted text `#4a6670`.
+- Fonts: Ubuntu (headings) + Inter (body) loaded from Google Fonts.
+- Logo is the Cloudinary SVG `<img>` in navbar, footer, and admin — not text/icon alone, but "Capacitiq" wordmark stays beside it in Ubuntu Bold.
+- Neumorphic shadows everywhere; no flat cards, borders, or outlines.
 
-2. **TikTok icon** — Inline SVG component `<TikTokIcon />` (the exact path you provided), used in the footer and contact page wherever TikTok appears.
+Navbar:
+- Floating pill, raised neumorphic shadow.
+- Desktop links: Home, Services, Templates, Portfolio, Blog, Careers, Company, Contact.
+- Right side: "Spotter Program" text link + lime "Work With Us" pill CTA.
+- Active page indicator: 6px lime dot centered under the active link (no underline).
+- Mobile: logo + hamburger; full-drawer with stacked links and "Work With Us" CTA at bottom.
 
-3. **Templates Manager — Canva link** — Templates table gets a `canva_link` column (URL, required). Field appears in the admin new/edit form. **Never selected or rendered on any public route.** Only fetched server-side inside `sendTemplateOrder`. RLS: public SELECT on templates excludes `canva_link` via an explicit safe-column view; admin SELECT sees everything.
+Footer:
+- Large neumorphic rounded card with 4 columns: brand/tagline, Connect (email + WhatsApp pills with Lucide icons), Our Links (Home/About Us/Services/Templates Shop/Portfolio/Careers), Follow Us (LinkedIn, Instagram, custom TikTok SVG only).
+- Bottom-center lime "Get a Free Consultation" CTA → `/contact`.
+- Copyright: © 2026 Capacitiq Solutions (Pty) Ltd.
 
-4. **`sendTemplateOrder` server function** — On checkout:
-   - Fetches purchased template rows server-side (including `canva_link`)
-   - **Customer email**:
-     - Subject: `Your Capacitiq Template — Here's Your Download Link`
-     - Body per template: template name, Canva link rendered as a lime CTA button, "A Canva account is required to access this template."
-     - Appends the full licence block (below) to every customer email
-   - **Internal notification** to `hello@capacitiq.co.za` with customer details + line items
+Home (/):
+- Remove B-BBEE pill from hero.
+- Hero copy + CTAs verbatim from spec; right column shows 3 neumorphic feature cards (Compass / PenTool / Megaphone).
+- Spotter strip with deep teal `#0b4650` background and lime CTA opening the shared Spotter modal.
+- Spotter modal fields + behavior per spec (success message replaces form, do not auto-close).
+- "What We Do" with 5 service cards (Compass / TrendingUp / Megaphone / Briefcase / PenTool), each linking to `/services#<id>`. No Sales pillar anywhere.
+- "Capacitiq Difference" comparison table card (full copy).
+- "How Our Pricing Works" — 4 step cards with ChevronRight separators.
+- Portfolio teaser (1 placeholder card + "View All Work").
+- From The Blog (3 placeholder cards + "Read All Posts").
+- Template Shop teaser (3 placeholder cards + "Browse All Templates").
+- FAQ accordion with all Q/A copy verbatim.
+- Ready to Start CTA section.
 
-5. **Licence block** — Stored as a shared constant `TEMPLATE_LICENCE` in `src/lib/licence.ts`. Rendered verbatim on:
-   - `/templates/checkout` confirmation step
-   - Customer template-order email body
-   ```
-   Standard packs are licensed for your personal or business use only. You may
-   edit and customise for your own brand, use final output commercially, and
-   share final output with your clients if using for client work. You may not
-   resell, redistribute, or share the original template file. You may not
-   transfer the licence to another person or business. All digital product
-   sales are final. Technical issues reported within 7 days will be resolved
-   as a technical remedy. A Canva account is required.
-   ```
+Services (/services):
+- Hero label/H1/body verbatim.
+- Pricing Guide section with gate modal (name/work email/optional company) → email lead via Resend + auto-download `/public/pricing-guide.pdf`.
+- 5 service pillars (ids: `business-strategy`, `marketing-growth`, `public-relations`, `virtual-assistance`, `graphic-design`) with numbers, taglines, deliverable checklists, and "Apply This To Your Business" CTAs.
+- Bottom CTA section.
 
-### Routes
-```
-/, /services, /portfolio, /blog, /blog/$slug,
-/templates, /templates/cart, /templates/checkout,
-/careers, /contact, /company,
-/admin/login, /admin (dashboard + blog/portfolio/templates/careers/submissions/settings),
-/sitemap.xml (server route)
-```
+Contact (/contact):
+- Two-column layout. Left: full contact form with all sections (Your Details, Business Overview, Service Selection [now includes Web Presence], Budget & Timeline, additional notes, consent checkbox) wired to Resend → hello@capacitiq.co.za.
+- Right: contact info pills (WhatsApp 064 062 0354, email, LinkedIn, TikTok SVG, Instagram) + hours card (Mon–Fri 9–5, Sat/Sun closed).
 
-`_public.tsx` layout: Navbar + Footer + mounted `<SpotterModal />`.
-`_admin.tsx` layout: sidebar + `beforeLoad` admin-role check.
+Careers (/careers):
+- Hero copy + 4 culture cards (Accountability, Clarity, Consistent Execution, Remote and Flexible).
+- Exactly two accordion role cards:
+  - Sales Spotter (OPEN) — Apply opens the SAME Spotter modal.
+  - Client Acquisition Specialist (CLOSED) — show muted "Applications Closed" pill, no Apply button.
 
-### Server functions (`src/lib/*.functions.ts`, Resend via gateway)
-- `sendContactEmail`, `sendSpotterReferral`, `sendPricingGuideLead`, `sendCareerApplication`, `sendTemplateOrder`
-- `adminLogin`, `updateAdminPassword`
+Company (/company):
+- Hero copy with registration details.
+- "Why businesses choose…" 3 cards (Who We Work With / What We Combine / How We Operate).
+- Philosophy, Vision, Mission blocks.
+- "How We Work" 5-step horizontal flow with arrows.
+- Company FAQ accordion (all Q/A verbatim).
+- Compliance section + 2 badge cards (B-BBEE Level 1, Reg No.) + Work With Us CTA.
 
-### Database (Lovable Cloud)
-- `profiles`, `user_roles` (enum role: `admin`) with `has_role()` security-definer function
-- `blog_posts`, `portfolio_items`, `templates` (with `canva_link`), `careers`, `submissions`
-- Public SELECT only for published rows / safe columns; admin-only write via `has_role(auth.uid(), 'admin')`
-- Seed: 2 careers listings, admin role for the two emails above
+Templates / Portfolio / Blog: keep existing CMS-driven pages, restyled to match neumorphic spec; verify `canva_link` stays private.
 
-### Design system
-Tailwind v4 tokens in `src/styles.css` — `--surface #e8edf0`, `--primary #0b4650`, `--accent #e6ff2b`, neumorphic shadows. Ubuntu (headings) + Inter (body) from Google Fonts. Primitives in `src/components/neu/`: `NeuCard`, `NeuButton`, `NeuInput`, `NeuTextarea`, `NeuPill`, `NeuIconBox`, `NeuAccordion`, `NeuModal`, `NeuStepArrow`. Shared `Navbar` (floating pill, lime-dot active indicator, hamburger on mobile) and `Footer` (4-column card → LinkedIn/TikTok/Instagram, C-bracket CTA arch).
+SEO (every page):
+- `<html lang="en-ZA">`, unique title `[Page Name] | Capacitiq — Business Strategy, Design & Operations`, unique description, og:title/description/image/url, twitter:card=summary_large_image, canonical.
+- One H1 per page, descriptive alts, hero `loading="eager"` + others `loading="lazy"`.
+- robots.txt + sitemap.xml + JSON-LD: Organization (home), Article (blog posts), JobPosting (each open career).
 
-### Content
-All copy verbatim from your brief.
-
-### SEO layer (your exact spec)
-- `<html lang="en-ZA">` in root shell
-- Per-route `head()` with unique title (`[Page] | Capacitiq — Business Strategy, Design & Operations`), the exact meta descriptions you provided, `og:title/description/image/url`, `twitter:card=summary_large_image`, canonical
-- One `<h1>` per page; clean H2/H3 hierarchy
-- All nav/footer links render `<a>` via TanStack `<Link>`
-- All images: descriptive `alt`, `loading="lazy"` (hero = `eager`)
-- `public/robots.txt` + `src/routes/sitemap[.]xml.ts` listing all static routes + published blog slugs
-- JSON-LD: `Organization` at root (sameAs LinkedIn/TikTok/Instagram, contactPoint with WhatsApp + email), `Article` per blog post, `JobPosting` per open careers listing
-
-### Build order
-1. Enable Lovable Cloud + add `RESEND_API_KEY` secret
-2. DB migration: tables, RLS, `has_role()`, seed careers + admin roles
-3. Design tokens + neumorphic primitives + fonts
-4. Shared Navbar / Footer / SpotterModal context / TikTok icon
-5. Public layout + all 11 public pages with full copy + SEO heads
-6. Admin login + 6 manager screens (blog, portfolio, templates with canva_link, careers, submissions, settings)
-7. Server functions wired to Resend (incl. `sendTemplateOrder` with licence block)
-8. robots.txt + dynamic sitemap.xml + JSON-LD
-9. Build verification
-
-### Post-build (you'll need to do)
-- Verify `capacitiq.co.za` in your Resend dashboard so `noreply@capacitiq.co.za` can send
-- Drop `pricing-guide.pdf` into `/public/`
-
-Approve and I'll execute end-to-end.
+### D. Validation
+- Confirm route tree generates; no duplicate `/` route.
+- Smoke-test admin login + password reset + each CRUD page.
+- Verify final checklist: no black, no white cards, logo is SVG image, no Sales pillar, shared Spotter modal, only 2 careers listings, only LinkedIn/TikTok/Instagram socials.
