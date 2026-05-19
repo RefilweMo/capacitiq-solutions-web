@@ -52,7 +52,7 @@ function AdminLayout() {
             return (
               <Link
                 key={n.to}
-                to={n.to}
+                to={n.to as never}
                 className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
                   active ? "neu-in text-[var(--brand)]" : "text-[var(--ink-soft)] hover:text-[var(--brand)]"
                 }`}
