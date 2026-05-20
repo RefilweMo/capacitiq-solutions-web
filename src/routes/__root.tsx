@@ -69,6 +69,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Capacitiq" },
+      { property: "og:title", content: "Capacitiq — Business Strategy, Design & Operations" },
+      { name: "twitter:title", content: "Capacitiq — Business Strategy, Design & Operations" },
+      { property: "og:description", content: "Capacitiq is a consulting, design, PR, and virtual assistance agency helping South African startups and SMEs build the systems, strategy, and execution support they need to grow with intention." },
+      { name: "twitter:description", content: "Capacitiq is a consulting, design, PR, and virtual assistance agency helping South African startups and SMEs build the systems, strategy, and execution support they need to grow with intention." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d313b923-60a4-4384-b9a0-c65000c0d639/id-preview-ba450e6e--21c16479-d22e-47ee-9b47-99bdf25bc017.lovable.app-1779263133377.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d313b923-60a4-4384-b9a0-c65000c0d639/id-preview-ba450e6e--21c16479-d22e-47ee-9b47-99bdf25bc017.lovable.app-1779263133377.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
