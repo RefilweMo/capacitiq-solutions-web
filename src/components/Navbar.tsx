@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import * as React from "react";
-import { NeuLinkButton } from "@/components/neu/NeuButton";
+import { Logo } from "@/components/Logo";
 import { useModals } from "@/components/ModalsProvider";
 
-const NAV = [
-  { to: "/", label: "Home" },
+const NAV: { to: string; label: string; exact?: boolean }[] = [
+  { to: "/", label: "Home", exact: true },
   { to: "/services", label: "Services" },
   { to: "/templates", label: "Templates" },
   { to: "/portfolio", label: "Portfolio" },
@@ -13,53 +13,78 @@ const NAV = [
   { to: "/careers", label: "Careers" },
   { to: "/company", label: "Company" },
   { to: "/contact", label: "Contact" },
-] as const;
+];
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const { openSpotter } = useModals();
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 md:py-6">
-        <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight text-[var(--ink)]">
-          <span className="neu-pill px-4 py-2 text-base">Capacitiq</span>
-        </Link>
-        <nav className="hidden lg:flex items-center gap-1 neu-pill px-3 py-2">
+    <header className="sticky top-4 z-50 px-4">
+      <div className="mx-auto max-w-7xl neu-pill flex items-center justify-between gap-4 px-5 py-3">
+        <Logo />
+
+        <nav className="hidden xl:flex items-center gap-1">
           {NAV.map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className="px-3 py-1.5 rounded-full text-sm font-medium text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors"
-              activeProps={{ className: "px-3 py-1.5 rounded-full text-sm font-semibold text-[var(--brand)] bg-white/60" }}
-              activeOptions={{ exact: n.to === "/" }}
+              activeOptions={{ exact: n.exact }}
+              className="relative px-3 py-2 rounded-full text-sm font-medium text-[#0b4650] hover:opacity-80 transition-opacity"
+              activeProps={{
+                className:
+                  "relative px-3 py-2 rounded-full text-sm font-medium text-[#0b4650] [&>span.dot]:opacity-100",
+              }}
             >
               {n.label}
+              <span
+                className="dot pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-1 h-1.5 w-1.5 rounded-full opacity-0 transition-opacity"
+                style={{ background: "#e6ff2b" }}
+              />
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center gap-3">
-          <button onClick={openSpotter} className="text-sm font-medium text-[var(--ink-soft)] hover:text-[var(--ink)]">
+
+        <div className="hidden md:flex items-center gap-4">
+          <button
+            onClick={openSpotter}
+            className="text-sm font-medium text-[#0b4650] hover:opacity-80"
+            style={{ fontFamily: "var(--font-body)" }}
+          >
             Spotter Program
           </button>
-          <NeuLinkButton to="/contact" variant="primary" size="sm">Book a call</NeuLinkButton>
+          <Link
+            to="/contact"
+            className="rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
+            style={{
+              fontFamily: "var(--font-display)",
+              background: "#e6ff2b",
+              color: "#0b4650",
+              boxShadow: "6px 6px 12px #c5cdd4, -6px -6px 12px #ffffff",
+            }}
+          >
+            Work With Us
+          </Link>
         </div>
+
         <button
           aria-label="Menu"
-          className="lg:hidden neu-out-sm h-10 w-10 rounded-full flex items-center justify-center"
+          className="md:hidden neu-out-sm h-10 w-10 rounded-full flex items-center justify-center text-[#0b4650]"
           onClick={() => setOpen(!open)}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
+
       {open && (
-        <div className="lg:hidden mx-4 mb-4 rounded-3xl neu-out p-4">
+        <div className="md:hidden mx-auto mt-3 max-w-7xl rounded-3xl neu-out p-4">
           <div className="flex flex-col">
             {NAV.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="px-4 py-3 rounded-2xl text-sm font-medium text-[var(--ink)] hover:bg-black/5"
+                className="px-4 py-3 rounded-2xl text-sm font-medium text-[#0b4650]"
               >
                 {n.label}
               </Link>
@@ -69,10 +94,23 @@ export function Navbar() {
                 setOpen(false);
                 openSpotter();
               }}
-              className="text-left px-4 py-3 rounded-2xl text-sm font-medium text-[var(--ink)] hover:bg-black/5"
+              className="text-left px-4 py-3 rounded-2xl text-sm font-medium text-[#0b4650]"
             >
               Spotter Program
             </button>
+            <Link
+              to="/contact"
+              onClick={() => setOpen(false)}
+              className="mt-3 text-center rounded-full px-5 py-3 text-xs font-bold uppercase tracking-wider"
+              style={{
+                fontFamily: "var(--font-display)",
+                background: "#e6ff2b",
+                color: "#0b4650",
+                boxShadow: "6px 6px 12px #c5cdd4, -6px -6px 12px #ffffff",
+              }}
+            >
+              Work With Us
+            </Link>
           </div>
         </div>
       )}

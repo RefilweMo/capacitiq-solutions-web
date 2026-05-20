@@ -65,6 +65,7 @@ export const sendSpotterReferral = createServerFn({ method: "POST" })
       lead_name: z.string().min(1).max(160),
       lead_company: z.string().max(160).optional().or(z.literal("")),
       lead_contact: z.string().min(1).max(200),
+      lead_aware: z.string().max(20).optional().or(z.literal("")),
       notes: z.string().max(2000).optional().or(z.literal("")),
     }).parse,
   )

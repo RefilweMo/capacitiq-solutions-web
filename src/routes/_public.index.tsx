@@ -1,15 +1,16 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, Sparkles, Zap, Target, MessageCircle } from "lucide-react";
-import { NeuLinkButton, NeuButton } from "@/components/neu/NeuButton";
+import { Compass, TrendingUp, Megaphone, Briefcase, PenTool, ChevronRight } from "lucide-react";
 import { useModals } from "@/components/ModalsProvider";
+import { NeuAccordion } from "@/components/neu/NeuAccordion";
 
 export const Route = createFileRoute("/_public/")({
   head: () => ({
     meta: [
-      { title: "Capacitiq — Business Support for South African Startups & SMEs" },
-      { name: "description", content: "We give startups and SMEs the operational structure they need to scale. Fractional ops, design, sales, and consulting from one B-BBEE Level 1 partner." },
-      { property: "og:title", content: "Capacitiq — Build the business behind the business" },
-      { property: "og:description", content: "Fractional ops, design, sales, and consulting for South African SMEs." },
+      { title: "Capacitiq — Build a business that operates with clarity and structure" },
+      { name: "description", content: "Capacitiq is a consulting, design, PR, and virtual assistance agency helping startups and SMEs build the systems, strategy, and execution support they need to grow with intention." },
+      { property: "og:title", content: "Capacitiq — Build a business that operates with clarity and structure" },
+      { property: "og:description", content: "Consulting, design, PR, and virtual assistance for South African SMEs." },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
     ],
@@ -33,112 +34,224 @@ export const Route = createFileRoute("/_public/")({
   component: HomePage,
 });
 
+const LIME_BTN: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  background: "#e6ff2b",
+  color: "#0b4650",
+  boxShadow: "6px 6px 12px #c5cdd4, -6px -6px 12px #ffffff",
+};
+
+const SERVICES = [
+  { n: "01", Icon: Compass, t: "Business Strategy & Operations", d: "Build the foundation. Create the systems. Lead with clarity. We help you move from instinct and improvisation to structured, documented, and intentional operations.", hash: "business-strategy" },
+  { n: "02", Icon: TrendingUp, t: "Marketing & Growth", d: "Be seen. Be understood. Be chosen. We build positioning, systems, and campaigns that attract the right people and convert them.", hash: "marketing-growth" },
+  { n: "03", Icon: Megaphone, t: "Public Relations", d: "Shape the narrative. Build the authority. Control the conversation. We focus on positioning, messaging, and communication strategy.", hash: "public-relations" },
+  { n: "04", Icon: Briefcase, t: "Virtual Assistance", d: "Stop doing everything. Start running a business. We take the operational load off your desk through proper systems and consistent execution support.", hash: "virtual-assistance" },
+  { n: "05", Icon: PenTool, t: "Graphic Design", d: "Look like you mean business. Every visual we produce supports how your business positions itself, how it sells, and how it is remembered.", hash: "graphic-design" },
+];
+
+const TABLE = [
+  ["Deliver output and move on", "Deliver output and document how it works"],
+  ["Charge by the hour and expand scope quietly", "Fixed packages with defined deliverables and no surprises"],
+  ["Work in isolation from your business goals", "Every service is connected to a broader business outcome"],
+  ["Offer one or two disciplines", "Six integrated pillars so you do not need six vendors"],
+  ["You own the work but not the thinking behind it", "You own everything including the work, the thinking, and the systems"],
+];
+
+const STEPS = [
+  { n: "Step 1", t: "Entry: Ignite", d: "Test the partnership, solve one specific problem, or get clarity before committing to a larger scope." },
+  { n: "Step 2", t: "Mid-tier Project", d: "A defined business challenge that needs proper attention." },
+  { n: "Step 3", t: "Senior Project", d: "Complex or multi-session engagements requiring deep diagnostic work and strategic depth." },
+  { n: "Step 4", t: "Monthly Retainer", d: "Ongoing support with consistent output scaling to full fractional support." },
+];
+
+const FAQS = [
+  { q: "How do your services work in practice?", a: "We start with a discovery session to understand your business — how it operates, where the gaps are, and what outcomes you need. From there we scope a focused engagement, agree on deliverables, and work through implementation together. You are never handed a document and left to figure it out alone." },
+  { q: "Do you offer once-off services or ongoing support?", a: "Both. Our pricing structure moves from once-off entry and project engagements to monthly retainers. You can start with a single focused project and move into ongoing support once the relationship is established." },
+  { q: "Is this suitable for early stage businesses?", a: "Yes. Many of our clients are past the idea stage but have not yet formalised how they operate. If you are generating revenue but running on instinct, this is exactly the stage where structured support creates the most impact." },
+  { q: "Do you create logos or video content?", a: "We create logos as part of our Graphic Design pillar. Video content is not a current service offering. We focus on static and document-based visual assets that support business positioning and execution." },
+  { q: "Do you handle media placements or press coverage?", a: "Our PR work focuses on positioning, messaging strategy, stakeholder communication, and authority building rather than paid media placement. We build the narrative infrastructure your business needs to earn coverage organically." },
+  { q: "How long does a project take?", a: "Entry-level engagements are typically completed within one to two weeks. Mid-tier projects run two to four weeks. Senior and multi-session projects are scoped individually. Retainers operate on a monthly cadence with agreed deliverables per cycle." },
+  { q: "What do you need from us to get started?", a: "Clarity on what you are trying to solve and willingness to engage in the process. We send a short onboarding brief before any engagement begins so we can prepare properly. You do not need a polished brief — just an honest one." },
+  { q: "Will you manage everything for us?", a: "We are not a management company. We integrate into your workflow, build the systems, and support execution — but the business remains yours to lead. Our goal is to leave you with something you can operate independently, not to create dependency on us." },
+];
+
 function HomePage() {
   const { openSpotter } = useModals();
+
   return (
     <div className="mx-auto max-w-7xl px-5">
-      {/* Hero */}
+      {/* HERO */}
       <section className="pt-12 md:pt-20 pb-16">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] items-center">
-          <div>
-            <div className="neu-pill inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[var(--ink-soft)]">
-              <Sparkles className="h-3.5 w-3.5 text-[var(--brand)]" />
-              B-BBEE Level 1 · Remote-first · South Africa
-            </div>
-            <h1 className="mt-6 text-5xl md:text-7xl font-bold tracking-tight text-balance">
-              Build the business <span className="text-[var(--brand)]">behind the business.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg text-[var(--ink-soft)] text-balance">
-              Capacitiq is the operational backbone for South African startups and SMEs. Fractional ops, design, sales, and consulting — delivered with the rigour your business deserves.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <NeuLinkButton to="/contact" variant="primary" size="lg">
-                Book a discovery call <ArrowRight className="h-4 w-4" />
-              </NeuLinkButton>
-              <NeuLinkButton to="/services" variant="secondary" size="lg">See services</NeuLinkButton>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="neu-out rounded-[2.5rem] p-8 md:p-10">
-              <div className="grid gap-4">
-                {[
-                  { icon: Target, t: "Operations that scale", d: "SOPs, dashboards, and finance hygiene." },
-                  { icon: Zap, t: "Design that converts", d: "Brand, decks, and digital that lands." },
-                  { icon: CheckCircle2, t: "Sales that compound", d: "Pipelines, scripts, and outbound that works." },
-                ].map((f) => (
-                  <div key={f.t} className="neu-in-sm rounded-2xl p-4 flex items-start gap-4">
-                    <div className="neu-out-sm h-11 w-11 rounded-full flex items-center justify-center shrink-0">
-                      <f.icon className="h-5 w-5 text-[var(--brand)]" />
-                    </div>
-                    <div>
-                      <p className="font-semibold">{f.t}</p>
-                      <p className="text-sm text-[var(--ink-soft)]">{f.d}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-balance text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            Build a business that operates with clarity and structure.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg text-[#4a6670] text-balance">
+            Capacitiq is a consulting, design, PR, and virtual assistance agency helping startups and SMEs build the systems, strategy, and execution support they need to grow with intention.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Link to="/contact" className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-wider" style={LIME_BTN}>
+              Work With Us
+            </Link>
+            <Link
+              to="/services"
+              className="neu-out rounded-full px-7 py-4 text-sm font-medium text-[#0b4650]"
+            >
+              See how this works in practice
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Spotter banner CTA */}
+      {/* SPOTTERS (dark teal) */}
       <section className="my-12">
-        <div className="neu-out rounded-[2rem] p-8 md:p-12 bg-[var(--brand)] text-[var(--brand-ink)] relative overflow-hidden">
+        <div
+          className="rounded-[2rem] p-8 md:p-12 relative overflow-hidden"
+          style={{ background: "#0b4650", boxShadow: "8px 8px 16px #c5cdd4, -8px -8px 16px #ffffff" }}
+        >
           <div className="grid gap-6 md:grid-cols-[1.5fr_auto] items-center">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--lime)]">Spotter Program</p>
-              <h2 className="mt-3 text-3xl md:text-4xl font-bold text-balance">Know a business that needs structure? Refer them. Earn commission.</h2>
-              <p className="mt-3 text-sm md:text-base text-[var(--brand-ink)]/80 max-w-2xl">
-                Anyone can be a Spotter. If your referral signs with us, you earn — no contract required.
+              <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: "#e6ff2b" }}>
+                Spotter Program
+              </p>
+              <h2 className="mt-3 text-3xl md:text-5xl font-bold text-balance text-white" style={{ fontFamily: "var(--font-display)" }}>
+                Turn your network into income.
+              </h2>
+              <p className="mt-4 text-base md:text-lg text-white/90">
+                Refer a business to Capacitiq and earn 15% of their first invoice.
               </p>
             </div>
-            <NeuButton onClick={openSpotter} variant="lime" size="lg">
-              Refer a business <ArrowRight className="h-4 w-4" />
-            </NeuButton>
+            <button
+              onClick={openSpotter}
+              className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-wider"
+              style={LIME_BTN}
+            >
+              Become a Spotter
+            </button>
           </div>
         </div>
       </section>
 
-      {/* What we do */}
+      {/* WHAT WE DO */}
       <section className="py-16">
-        <div className="flex items-end justify-between flex-wrap gap-6 mb-10">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand)]">Capabilities</p>
-            <h2 className="mt-2 text-4xl md:text-5xl font-bold tracking-tight">Six ways we plug in.</h2>
-          </div>
-          <Link to="/services" className="text-sm font-medium text-[var(--brand)] hover:underline">All services →</Link>
+        <div className="max-w-3xl mb-12">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4a6670]">Capabilities</p>
+          <h2 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            One relationship. Full-service delivery.
+          </h2>
+          <p className="mt-5 text-base text-[#4a6670]">
+            We are a multidisciplinary business support agency. Across five service pillars and a fully managed web presence offering, we provide the strategy, systems, execution support, and creative output that small businesses need to function properly and grow with intention. You do not need five vendors. You need one partner who understands the full picture.
+          </p>
         </div>
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            { t: "Operations", d: "SOPs, workflow design, project management. We make your business run without you watching it." },
-            { t: "Sales", d: "Outbound systems, pipelines, scripts, CRM setup. Turn cold lists into a booked calendar." },
-            { t: "Design", d: "Brand identity, decks, social, web. Visuals that make you look like the leader you are." },
-            { t: "Consulting", d: "Strategy sessions and growth audits. Get unstuck and out of your own way." },
-            { t: "Admin & Support", d: "Virtual assistants, inbox triage, scheduling. Free up the founder's calendar." },
-            { t: "Templates", d: "Plug-and-play Canva templates, decks, and SOPs you can deploy today." },
-          ].map((s) => (
-            <div key={s.t} className="neu-out rounded-3xl p-7">
-              <h3 className="text-xl font-bold">{s.t}</h3>
-              <p className="mt-3 text-sm text-[var(--ink-soft)]">{s.d}</p>
+          {SERVICES.map((s) => (
+            <div key={s.n} className="neu-out rounded-3xl p-7 flex flex-col">
+              <div className="flex items-center justify-between">
+                <div className="neu-out-sm h-12 w-12 rounded-full flex items-center justify-center text-[#0b4650]">
+                  <s.Icon className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-bold text-[#4a6670]">{s.n}</span>
+              </div>
+              <h3 className="mt-5 text-xl font-bold text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+                {s.t}
+              </h3>
+              <p className="mt-3 text-sm text-[#4a6670] flex-1">{s.d}</p>
+              <Link to="/services" hash={s.hash} className="mt-5 text-sm font-medium text-[#0b4650] hover:underline">
+                See how this works in practice →
+              </Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* DIFFERENCE TABLE */}
+      <section className="py-16">
+        <div className="max-w-3xl mb-10">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            The Capacitiq Difference
+          </h2>
+          <p className="mt-5 text-base text-[#4a6670]">
+            There is no shortage of people who will take your brief and produce something. What is rare is a partner who thinks before they produce, documents what they build, and leaves you with something that works after they are gone.
+          </p>
+        </div>
+
+        <div className="neu-out rounded-3xl overflow-hidden">
+          <div className="grid grid-cols-2" style={{ background: "#0b4650" }}>
+            <div className="p-5 text-sm font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+              Most Agencies or Freelancers
+            </div>
+            <div className="p-5 text-sm font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+              Capacitiq
+            </div>
+          </div>
+          {TABLE.map(([a, b], i) => (
+            <div key={i} className="grid grid-cols-2 border-t border-[#c5cdd4]/60">
+              <div className="p-5 text-sm text-[#4a6670]">{a}</div>
+              <div className="p-5 text-sm text-[#0b4650] font-medium">{b}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PRICING LADDER */}
+      <section className="py-16">
+        <div className="max-w-3xl mb-12">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4a6670]">How Our Pricing Works</p>
+          <h2 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            A Ladder of Value. Start anywhere.
+          </h2>
+          <p className="mt-5 text-base text-[#4a6670]">
+            Every pillar follows a clear structure from a focused entry package to full fractional or agency-level support. You can start at any point.
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row items-stretch gap-4">
+          {STEPS.map((s, i) => (
+            <React.Fragment key={s.n}>
+              <div className="neu-out rounded-3xl p-6 flex-1">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#4a6670]">{s.n}</p>
+                <h3 className="mt-2 text-xl font-bold text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>{s.t}</h3>
+                <p className="mt-3 text-sm text-[#4a6670]">{s.d}</p>
+              </div>
+              {i < STEPS.length - 1 && (
+                <div className="hidden lg:flex items-center justify-center text-[#0b4650]">
+                  <ChevronRight className="h-6 w-6" />
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16">
+        <div className="max-w-3xl mb-12">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4a6670]">FAQ</p>
+          <h2 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            Questions you may already have before reaching out.
+          </h2>
+        </div>
+        <NeuAccordion items={FAQS.map((f) => ({ q: f.q, a: f.a }))} />
+      </section>
+
+      {/* FINAL CTA */}
       <section className="py-16">
         <div className="neu-out rounded-[2rem] p-10 md:p-16 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-balance">Ready to operate with clarity?</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-[var(--ink-soft)]">Tell us where you're stuck. We'll show you what to build next — no pitch, just clarity.</p>
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            <NeuLinkButton to="/contact" variant="primary" size="lg">Book a call</NeuLinkButton>
-            <a href="https://wa.me/27640620354" target="_blank" rel="noopener noreferrer" className="neu-out inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium">
-              <MessageCircle className="h-4 w-4" /> WhatsApp us
-            </a>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-balance text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+            Build a business that runs with intention.
+          </h2>
+          <p className="mt-5 max-w-2xl mx-auto text-base text-[#4a6670]">
+            If your business is ready to move from reactive operations to structured execution, this is where the shift begins.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <Link to="/contact" className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-wider" style={LIME_BTN}>
+              Work With Us
+            </Link>
           </div>
         </div>
       </section>
     </div>
   );
 }
+
