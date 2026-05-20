@@ -1,61 +1,86 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Linkedin, Mail, MessageCircle } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 import { TikTokIcon } from "@/components/icons/TikTokIcon";
+import { Logo } from "@/components/Logo";
+import { EMAIL, WHATSAPP_DISPLAY, SOCIAL } from "@/lib/brand";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[var(--line)]/60">
-      <div className="mx-auto max-w-7xl px-5 py-16">
-        <div className="grid gap-12 md:grid-cols-4">
+    <footer className="mx-auto max-w-7xl px-5 pb-10 mt-24">
+      <div className="neu-out rounded-[2rem] p-8 md:p-12">
+        <div className="grid gap-10 md:grid-cols-4">
           <div>
-            <div className="neu-pill inline-block px-4 py-2 font-bold">Capacitiq</div>
-            <p className="mt-4 text-sm text-[var(--ink-soft)] max-w-xs">
-              Business support agency for South African startups & SMEs. We build operational structure that scales.
+            <Logo showText height={40} />
+            <p className="mt-4 text-sm text-[#4a6670] max-w-xs">
+              Build a business that operates with clarity and structure.
             </p>
-            <p className="mt-3 text-xs text-[var(--ink-soft)]">B-BBEE Level 1</p>
           </div>
+
           <div>
-            <h4 className="font-semibold mb-4 text-sm">Explore</h4>
-            <ul className="space-y-2 text-sm text-[var(--ink-soft)]">
-              <li><Link to="/services" className="hover:text-[var(--ink)]">Services</Link></li>
-              <li><Link to="/templates" className="hover:text-[var(--ink)]">Templates</Link></li>
-              <li><Link to="/portfolio" className="hover:text-[var(--ink)]">Portfolio</Link></li>
-              <li><Link to="/blog" className="hover:text-[var(--ink)]">Blog</Link></li>
+            <h4 className="font-bold mb-4 text-sm text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+              Connect With Us
+            </h4>
+            <ul className="space-y-2 text-sm text-[#4a6670]">
+              <li>
+                <a href={`mailto:${EMAIL}`} className="hover:text-[#0b4650]">{EMAIL}</a>
+              </li>
+              <li>
+                <a href="https://wa.me/27640620354" target="_blank" rel="noopener noreferrer" className="hover:text-[#0b4650]">
+                  {WHATSAPP_DISPLAY}
+                </a>
+              </li>
             </ul>
           </div>
+
           <div>
-            <h4 className="font-semibold mb-4 text-sm">Company</h4>
-            <ul className="space-y-2 text-sm text-[var(--ink-soft)]">
-              <li><Link to="/company" className="hover:text-[var(--ink)]">About</Link></li>
-              <li><Link to="/careers" className="hover:text-[var(--ink)]">Careers</Link></li>
-              <li><Link to="/contact" className="hover:text-[var(--ink)]">Contact</Link></li>
+            <h4 className="font-bold mb-4 text-sm text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+              Our Links
+            </h4>
+            <ul className="space-y-2 text-sm text-[#4a6670]">
+              <li><Link to="/" className="hover:text-[#0b4650]">Home</Link></li>
+              <li><Link to="/company" className="hover:text-[#0b4650]">About Us</Link></li>
+              <li><Link to="/services" className="hover:text-[#0b4650]">Services</Link></li>
+              <li><Link to="/templates" className="hover:text-[#0b4650]">Templates Shop</Link></li>
+              <li><Link to="/portfolio" className="hover:text-[#0b4650]">Portfolio</Link></li>
+              <li><Link to="/careers" className="hover:text-[#0b4650]">Careers</Link></li>
             </ul>
           </div>
+
           <div>
-            <h4 className="font-semibold mb-4 text-sm">Get in touch</h4>
+            <h4 className="font-bold mb-4 text-sm text-[#0b4650]" style={{ fontFamily: "var(--font-display)" }}>
+              Follow Us
+            </h4>
             <div className="flex items-center gap-3">
-              <a aria-label="WhatsApp" href="https://wa.me/27640620354" target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center">
-                <MessageCircle className="h-4 w-4" />
-              </a>
-              <a aria-label="Email" href="mailto:hello@capacitiq.co.za" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center">
-                <Mail className="h-4 w-4" />
-              </a>
-              <a aria-label="Instagram" href="https://www.instagram.com/capacitiq_za" target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center">
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a aria-label="LinkedIn" href="https://www.linkedin.com/company/capacitiq/" target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center">
+              <a aria-label="LinkedIn" href={SOCIAL.linkedin} target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center text-[#0b4650]">
                 <Linkedin className="h-4 w-4" />
               </a>
-              <a aria-label="TikTok" href="https://www.tiktok.com/@capacitiq" target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center">
+              <a aria-label="Instagram" href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center text-[#0b4650]">
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a aria-label="TikTok" href={SOCIAL.tiktok} target="_blank" rel="noopener noreferrer" className="neu-out-sm h-10 w-10 rounded-full flex items-center justify-center text-[#0b4650]">
                 <TikTokIcon className="h-4 w-4" />
               </a>
             </div>
-            <p className="mt-4 text-sm text-[var(--ink-soft)]">hello@capacitiq.co.za</p>
           </div>
         </div>
-        <div className="mt-12 pt-6 border-t border-[var(--line)]/60 flex flex-col md:flex-row justify-between gap-3 text-xs text-[var(--ink-soft)]">
-          <p>© {new Date().getFullYear()} Capacitiq. All rights reserved.</p>
-          <p>Remote-first · South Africa</p>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            to="/contact"
+            className="rounded-full px-6 py-3 text-xs font-bold uppercase tracking-wider"
+            style={{
+              fontFamily: "var(--font-display)",
+              background: "#e6ff2b",
+              color: "#0b4650",
+              boxShadow: "6px 6px 12px #c5cdd4, -6px -6px 12px #ffffff",
+            }}
+          >
+            Get a Free Consultation
+          </Link>
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-[#c5cdd4]/60 text-center text-xs text-[#4a6670]">
+          © 2026 Capacitiq Solutions (Pty) Ltd
         </div>
       </div>
     </footer>

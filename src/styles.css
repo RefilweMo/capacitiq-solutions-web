@@ -6,6 +6,8 @@
 
 /* ============================================================
    Capacitiq design tokens — neumorphic light surface
+   Colors locked: #e8edf0 surface, #0b4650 ink, #4a6670 muted,
+   #e6ff2b lime accent. No black, no white card fills.
    ============================================================ */
 @theme inline {
   --font-display: "Ubuntu", system-ui, sans-serif;
@@ -50,91 +52,96 @@
 :root {
   --radius: 1.25rem;
 
-  /* Capacitiq palette */
+  /* Capacitiq palette — locked */
   --surface: #e8edf0;
-  --surface-2: #dde3e7;
-  --ink: #0e1417;
-  --ink-soft: #4b5560;
-  --brand: #0b4650;          /* deep teal */
-  --brand-ink: #f4fbf9;
-  --lime: #e6ff2b;           /* accent */
-  --line: #c8d2d8;
+  --surface-2: #e8edf0;
+  --ink: #0b4650;
+  --ink-soft: #4a6670;
+  --brand: #0b4650;
+  --brand-ink: #ffffff;
+  --lime: #e6ff2b;
+  --line: #c5cdd4;
+  --shadow-dark: #c5cdd4;
+  --shadow-light: #ffffff;
 
   /* shadcn shim mapped to Capacitiq */
   --background: #e8edf0;
-  --foreground: #0e1417;
+  --foreground: #0b4650;
   --card: #e8edf0;
-  --card-foreground: #0e1417;
-  --popover: #ffffff;
-  --popover-foreground: #0e1417;
+  --card-foreground: #0b4650;
+  --popover: #e8edf0;
+  --popover-foreground: #0b4650;
   --primary: #0b4650;
-  --primary-foreground: #f4fbf9;
-  --secondary: #dde3e7;
-  --secondary-foreground: #0e1417;
-  --muted: #dde3e7;
-  --muted-foreground: #4b5560;
+  --primary-foreground: #ffffff;
+  --secondary: #e8edf0;
+  --secondary-foreground: #0b4650;
+  --muted: #e8edf0;
+  --muted-foreground: #4a6670;
   --accent: #e6ff2b;
-  --accent-foreground: #0e1417;
+  --accent-foreground: #0b4650;
   --destructive: #c4523a;
   --destructive-foreground: #ffffff;
-  --border: #c8d2d8;
-  --input: #c8d2d8;
+  --border: #c5cdd4;
+  --input: #c5cdd4;
   --ring: #0b4650;
 }
 
 @layer base {
   html, body {
-    background-color: var(--surface);
-    color: var(--ink);
+    background-color: #e8edf0;
+    color: #0b4650;
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+    color: #0b4650;
     letter-spacing: -0.01em;
   }
   * { border-color: var(--line); }
 }
 
 /* ============================================================
-   Neumorphic utilities
+   Neumorphic utilities — spec shadows only
+   Raised: 8px 8px 16px #c5cdd4, -8px -8px 16px #ffffff
+   Inset:  inset 4px 4px 8px #c5cdd4, inset -4px -4px 8px #ffffff
    ============================================================ */
 @layer utilities {
   .neu-out {
-    background: var(--surface);
+    background: #e8edf0;
     box-shadow:
-      8px 8px 20px rgba(163, 177, 188, 0.55),
-      -8px -8px 20px rgba(255, 255, 255, 0.85);
+      8px 8px 16px #c5cdd4,
+      -8px -8px 16px #ffffff;
   }
   .neu-out-sm {
-    background: var(--surface);
+    background: #e8edf0;
     box-shadow:
-      5px 5px 12px rgba(163, 177, 188, 0.5),
-      -5px -5px 12px rgba(255, 255, 255, 0.85);
+      5px 5px 10px #c5cdd4,
+      -5px -5px 10px #ffffff;
   }
   .neu-in {
-    background: var(--surface);
+    background: #e8edf0;
     box-shadow:
-      inset 6px 6px 14px rgba(163, 177, 188, 0.55),
-      inset -6px -6px 14px rgba(255, 255, 255, 0.9);
+      inset 4px 4px 8px #c5cdd4,
+      inset -4px -4px 8px #ffffff;
   }
   .neu-in-sm {
-    background: var(--surface);
+    background: #e8edf0;
     box-shadow:
-      inset 3px 3px 7px rgba(163, 177, 188, 0.55),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.9);
+      inset 3px 3px 6px #c5cdd4,
+      inset -3px -3px 6px #ffffff;
   }
   .neu-press:active {
     box-shadow:
-      inset 5px 5px 12px rgba(163, 177, 188, 0.5),
-      inset -5px -5px 12px rgba(255, 255, 255, 0.85);
+      inset 4px 4px 8px #c5cdd4,
+      inset -4px -4px 8px #ffffff;
   }
   .neu-pill {
-    background: var(--surface);
+    background: #e8edf0;
     border-radius: 9999px;
     box-shadow:
-      6px 6px 14px rgba(163, 177, 188, 0.5),
-      -6px -6px 14px rgba(255, 255, 255, 0.85);
+      6px 6px 12px #c5cdd4,
+      -6px -6px 12px #ffffff;
   }
   .text-balance { text-wrap: balance; }
 }
