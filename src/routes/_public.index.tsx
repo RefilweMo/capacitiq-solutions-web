@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Compass, TrendingUp, Megaphone, Briefcase, PenTool, ChevronRight } from "lucide-react";
 import { useModals } from "@/components/ModalsProvider";
@@ -254,4 +255,3 @@ function HomePage() {
   );
 }
 
-import * as React from "react";

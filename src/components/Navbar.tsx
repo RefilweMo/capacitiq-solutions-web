@@ -4,7 +4,7 @@ import * as React from "react";
 import { Logo } from "@/components/Logo";
 import { useModals } from "@/components/ModalsProvider";
 
-const NAV = [
+const NAV: { to: string; label: string; exact?: boolean }[] = [
   { to: "/", label: "Home", exact: true },
   { to: "/services", label: "Services" },
   { to: "/templates", label: "Templates" },
@@ -13,7 +13,7 @@ const NAV = [
   { to: "/careers", label: "Careers" },
   { to: "/company", label: "Company" },
   { to: "/contact", label: "Contact" },
-] as const;
+];
 
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
