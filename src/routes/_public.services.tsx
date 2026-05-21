@@ -87,7 +87,7 @@ const PILLARS = [
 ];
 
 function ServicesPage() {
-  const { openPricingGuide } = useModals();
+  const { openPricing } = useModals();
 
   return (
     <div className="mx-auto max-w-7xl px-5">
@@ -112,7 +112,7 @@ function ServicesPage() {
               Our pricing guide outlines how we structure our services, what is included, and how engagements are approached. Download it before reaching out so you can make an informed decision on what fits your business.
             </p>
           </div>
-          <button onClick={openPricingGuide} className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-wider whitespace-nowrap" style={LIME_BTN}>
+          <button onClick={openPricing} className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-wider whitespace-nowrap" style={LIME_BTN}>
             Download Pricing Guide
           </button>
         </div>
