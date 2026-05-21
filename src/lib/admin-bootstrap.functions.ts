@@ -23,7 +23,7 @@ export const ensureAdminUser = createServerFn({ method: "POST" })
       throw new Error("This email is not authorised for admin bootstrap.");
     }
 
-    // Look up the existing user (paginate up to 1000 users — enough for our small admin base)
+    // Look up the existing user
     const { data: list, error: listErr } = await supabaseAdmin.auth.admin.listUsers({
       page: 1,
       perPage: 200,
@@ -31,6 +31,20 @@ export const ensureAdminUser = createServerFn({ method: "POST" })
     if (listErr) throw new Error(listErr.message);
 
     const existing = list.users.find((u) => u.email?.toLowerCase() === email);
+
+    // SECURITY: if any admin already exists, refuse to set the password here.
+    // Force the normal recovery flow (resetPasswordForEmail) so an attacker
+    // can't seize the account by hitting this endpoint.
+    const { count: adminCount } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id", { count: "exact", head: true })
+      .eq("role", "admin");
+
+    if ((adminCount ?? 0) > 0) {
+      throw new Error(
+        "Admin already exists. Use the password reset link instead of first-time setup.",
+      );
+    }
 
     let userId: string;
     if (existing) {
@@ -50,12 +64,10 @@ export const ensureAdminUser = createServerFn({ method: "POST" })
       userId = created.user!.id;
     }
 
-    // Ensure profile row
     await supabaseAdmin
       .from("profiles")
       .upsert({ user_id: userId, email, display_name: email.split("@")[0] }, { onConflict: "user_id" });
 
-    // Ensure admin role
     await supabaseAdmin
       .from("user_roles")
       .upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });

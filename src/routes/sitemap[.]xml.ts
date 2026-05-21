@@ -1,13 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-const BASE_URL = "";
+const BASE_URL = "https://capacitiq.co.za";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const staticPaths = ["/", "/services", "/templates", "/portfolio", "/blog", "/careers", "/company", "/contact"];
+        const staticPaths = [
+          "/", "/services", "/templates", "/portfolio", "/blog",
+          "/careers", "/company", "/contact",
+          "/privacy-policy", "/terms-of-service", "/template-policy",
+          "/refund-policy", "/cookie-policy",
+        ];
         const [{ data: posts }, { data: tpls }] = await Promise.all([
           supabaseAdmin.from("blog_posts").select("slug,updated_at").eq("published", true),
           supabaseAdmin.from("templates").select("id,updated_at").eq("active", true),
