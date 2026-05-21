@@ -101,6 +101,30 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_pages: {
+        Row: {
+          content: string
+          effective_date: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          effective_date?: string
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          effective_date?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       portfolio_items: {
         Row: {
           category: string | null
@@ -265,6 +289,45 @@ export type Database = {
       }
     }
     Views: {
+      public_templates: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          cover_image: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string | null
+          name: string | null
+          price_cents: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string | null
+          name?: string | null
+          price_cents?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string | null
+          name?: string | null
+          price_cents?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       templates_public: {
         Row: {
           active: boolean | null
