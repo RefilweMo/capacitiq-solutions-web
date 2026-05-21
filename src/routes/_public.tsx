@@ -5,6 +5,7 @@ import { ModalsProvider } from "@/components/ModalsProvider";
 import { SpotterModal } from "@/components/SpotterModal";
 import { PricingGuideModal } from "@/components/PricingGuideModal";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/CookieBanner";
 
 export const Route = createFileRoute("/_public")({
   component: PublicLayout,
@@ -22,6 +23,7 @@ function PublicLayout() {
       </div>
       <SpotterModal />
       <PricingGuideModal />
+      <CookieBanner />
       <Toaster />
     </ModalsProvider>
   );
