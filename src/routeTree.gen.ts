@@ -9,8 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
+import { Route as TemplatePolicyRouteImport } from './routes/template-policy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -19,6 +24,7 @@ import { Route as AdminTemplatesRouteImport } from './routes/admin.templates'
 import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminPortfolioRouteImport } from './routes/admin.portfolio'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminLegalRouteImport } from './routes/admin.legal'
 import { Route as AdminCareersRouteImport } from './routes/admin.careers'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as PublicTemplatesRouteImport } from './routes/_public.templates'
@@ -30,8 +36,19 @@ import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicTemplatesCheckoutRouteImport } from './routes/_public.templates.checkout'
 import { Route as PublicTemplatesIdRouteImport } from './routes/_public.templates.$id'
+import { Route as PublicLegalSlugRouteImport } from './routes/_public.legal.$slug'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public.blog.$slug'
 
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TemplatePolicyRoute = TemplatePolicyRouteImport.update({
+  id: '/template-policy',
+  path: '/template-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -40,6 +57,21 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundPolicyRoute = RefundPolicyRouteImport.update({
+  id: '/refund-policy',
+  path: '/refund-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiePolicyRoute = CookiePolicyRouteImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -79,6 +111,11 @@ const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLegalRoute = AdminLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCareersRoute = AdminCareersRouteImport.update({
@@ -136,6 +173,11 @@ const PublicTemplatesIdRoute = PublicTemplatesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => PublicTemplatesRoute,
 } as any)
+const PublicLegalSlugRoute = PublicLegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -145,8 +187,13 @@ const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/template-policy': typeof TemplatePolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
   '/company': typeof PublicCompanyRoute
@@ -156,18 +203,25 @@ export interface FileRoutesByFullPath {
   '/templates': typeof PublicTemplatesRouteWithChildren
   '/admin/blog': typeof AdminBlogRoute
   '/admin/careers': typeof AdminCareersRoute
+  '/admin/legal': typeof AdminLegalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
+  '/legal/$slug': typeof PublicLegalSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
   '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
 export interface FileRoutesByTo {
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/template-policy': typeof TemplatePolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
   '/company': typeof PublicCompanyRoute
@@ -177,6 +231,7 @@ export interface FileRoutesByTo {
   '/templates': typeof PublicTemplatesRouteWithChildren
   '/admin/blog': typeof AdminBlogRoute
   '/admin/careers': typeof AdminCareersRoute
+  '/admin/legal': typeof AdminLegalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -184,6 +239,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
+  '/legal/$slug': typeof PublicLegalSlugRoute
   '/templates/$id': typeof PublicTemplatesIdRoute
   '/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
@@ -191,8 +247,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/template-policy': typeof TemplatePolicyRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/careers': typeof PublicCareersRoute
   '/_public/company': typeof PublicCompanyRoute
@@ -202,6 +263,7 @@ export interface FileRoutesById {
   '/_public/templates': typeof PublicTemplatesRouteWithChildren
   '/admin/blog': typeof AdminBlogRoute
   '/admin/careers': typeof AdminCareersRoute
+  '/admin/legal': typeof AdminLegalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/submissions': typeof AdminSubmissionsRoute
@@ -209,6 +271,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
+  '/_public/legal/$slug': typeof PublicLegalSlugRoute
   '/_public/templates/$id': typeof PublicTemplatesIdRoute
   '/_public/templates/checkout': typeof PublicTemplatesCheckoutRoute
 }
@@ -217,8 +280,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/cookie-policy'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/template-policy'
+    | '/terms-of-service'
     | '/blog'
     | '/careers'
     | '/company'
@@ -228,18 +296,25 @@ export interface FileRouteTypes {
     | '/templates'
     | '/admin/blog'
     | '/admin/careers'
+    | '/admin/legal'
     | '/admin/login'
     | '/admin/portfolio'
     | '/admin/submissions'
     | '/admin/templates'
     | '/admin/'
     | '/blog/$slug'
+    | '/legal/$slug'
     | '/templates/$id'
     | '/templates/checkout'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/cookie-policy'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/template-policy'
+    | '/terms-of-service'
     | '/blog'
     | '/careers'
     | '/company'
@@ -249,6 +324,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/admin/blog'
     | '/admin/careers'
+    | '/admin/legal'
     | '/admin/login'
     | '/admin/portfolio'
     | '/admin/submissions'
@@ -256,14 +332,20 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/blog/$slug'
+    | '/legal/$slug'
     | '/templates/$id'
     | '/templates/checkout'
   id:
     | '__root__'
     | '/_public'
     | '/admin'
+    | '/cookie-policy'
+    | '/privacy-policy'
+    | '/refund-policy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/template-policy'
+    | '/terms-of-service'
     | '/_public/blog'
     | '/_public/careers'
     | '/_public/company'
@@ -273,6 +355,7 @@ export interface FileRouteTypes {
     | '/_public/templates'
     | '/admin/blog'
     | '/admin/careers'
+    | '/admin/legal'
     | '/admin/login'
     | '/admin/portfolio'
     | '/admin/submissions'
@@ -280,6 +363,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/admin/'
     | '/_public/blog/$slug'
+    | '/_public/legal/$slug'
     | '/_public/templates/$id'
     | '/_public/templates/checkout'
   fileRoutesById: FileRoutesById
@@ -287,12 +371,31 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  CookiePolicyRoute: typeof CookiePolicyRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  RefundPolicyRoute: typeof RefundPolicyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TemplatePolicyRoute: typeof TemplatePolicyRoute
+  TermsOfServiceRoute: typeof TermsOfServiceRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/template-policy': {
+      id: '/template-policy'
+      path: '/template-policy'
+      fullPath: '/template-policy'
+      preLoaderRoute: typeof TemplatePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -305,6 +408,27 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refund-policy': {
+      id: '/refund-policy'
+      path: '/refund-policy'
+      fullPath: '/refund-policy'
+      preLoaderRoute: typeof RefundPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -361,6 +485,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/legal': {
+      id: '/admin/legal'
+      path: '/legal'
+      fullPath: '/admin/legal'
+      preLoaderRoute: typeof AdminLegalRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/careers': {
@@ -440,6 +571,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicTemplatesIdRouteImport
       parentRoute: typeof PublicTemplatesRoute
     }
+    '/_public/legal/$slug': {
+      id: '/_public/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof PublicLegalSlugRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/blog/$slug': {
       id: '/_public/blog/$slug'
       path: '/$slug'
@@ -485,6 +623,7 @@ interface PublicRouteChildren {
   PublicServicesRoute: typeof PublicServicesRoute
   PublicTemplatesRoute: typeof PublicTemplatesRouteWithChildren
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicLegalSlugRoute: typeof PublicLegalSlugRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -496,6 +635,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicServicesRoute: PublicServicesRoute,
   PublicTemplatesRoute: PublicTemplatesRouteWithChildren,
   PublicIndexRoute: PublicIndexRoute,
+  PublicLegalSlugRoute: PublicLegalSlugRoute,
 }
 
 const PublicRouteWithChildren =
@@ -504,6 +644,7 @@ const PublicRouteWithChildren =
 interface AdminRouteChildren {
   AdminBlogRoute: typeof AdminBlogRoute
   AdminCareersRoute: typeof AdminCareersRoute
+  AdminLegalRoute: typeof AdminLegalRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPortfolioRoute: typeof AdminPortfolioRoute
   AdminSubmissionsRoute: typeof AdminSubmissionsRoute
@@ -514,6 +655,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBlogRoute: AdminBlogRoute,
   AdminCareersRoute: AdminCareersRoute,
+  AdminLegalRoute: AdminLegalRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPortfolioRoute: AdminPortfolioRoute,
   AdminSubmissionsRoute: AdminSubmissionsRoute,
@@ -526,19 +668,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  CookiePolicyRoute: CookiePolicyRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  RefundPolicyRoute: RefundPolicyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TemplatePolicyRoute: TemplatePolicyRoute,
+  TermsOfServiceRoute: TermsOfServiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

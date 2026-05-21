@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, FileText, Briefcase, ShoppingBag, Users, Inbox, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Briefcase, ShoppingBag, Users, Inbox, Scale, LogOut } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/admin")({
@@ -16,6 +16,7 @@ const NAV: NavItem[] = [
   { to: "/admin/templates", label: "Templates", icon: ShoppingBag },
   { to: "/admin/careers", label: "Careers", icon: Users },
   { to: "/admin/submissions", label: "Submissions", icon: Inbox },
+  { to: "/admin/legal", label: "Legal Pages", icon: Scale },
 ];
 
 function AdminLayout() {

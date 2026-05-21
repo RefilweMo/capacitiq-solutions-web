@@ -1,87 +1,138 @@
-## Plan
+# Capacitiq — Correction & Completion Plan
 
-### A. Fix admin login and password reset
-- Add "Forgot password?" link on `/admin/login` that triggers password recovery email with redirect to `/reset-password`.
-- Create new public route `/reset-password` to handle recovery deep links and let the admin set a new password (e.g. `Ciq@Admin2026!`).
-- Improve sign-in errors and gate non-admin users with a clear "admin only" message.
-- Verify admin trigger and add a server-side admin bootstrap repair so `admin@capacitiq.co.za` reliably gets the admin role.
-- Configure auth: keep email confirmations on, enable leaked-password protection.
+Scope is large but grouped into 7 sequential phases. Each phase is independently verifiable.
 
-### B. Build full admin CRUD editors
-Replace dashboard placeholders with real editors backed by the existing server functions:
-- `/admin/blog` — list + create/edit/delete, publish toggle, slug/title/excerpt/content/cover/author/tags.
-- `/admin/portfolio` — list + create/edit/delete, publish toggle, title/client/category/description/cover/url/tags/order.
-- `/admin/templates` — list + create/edit/delete, active toggle, name/description/price/cover/category/private Canva link/order.
-- `/admin/careers` — list + create/edit/delete, open/close toggle, title/location/type/summary/description/requirements/order.
-- `/admin/submissions` — full submissions browser.
-- Sidebar/admin nav linking all sections; signed-out auto-redirect to `/admin/login`.
+---
 
-### C. Apply all critical edits from the latest spec doc
+## Phase 1 — Security & Infrastructure (BLOCKER)
 
-Brand and chrome (every page):
-- Background `#e8edf0`, primary `#0b4650`, accent `#e6ff2b`. No black, no white card backgrounds, muted text `#4a6670`.
-- Fonts: Ubuntu (headings) + Inter (body) loaded from Google Fonts.
-- Logo is the Cloudinary SVG `<img>` in navbar, footer, and admin — not text/icon alone, but "Capacitiq" wordmark stays beside it in Ubuntu Bold.
-- Neumorphic shadows everywhere; no flat cards, borders, or outlines.
+**1.1 Delete `CNAME`** at project root (and `public/` if present).
 
-Navbar:
-- Floating pill, raised neumorphic shadow.
-- Desktop links: Home, Services, Templates, Portfolio, Blog, Careers, Company, Contact.
-- Right side: "Spotter Program" text link + lime "Work With Us" pill CTA.
-- Active page indicator: 6px lime dot centered under the active link (no underline).
-- Mobile: logo + hamburger; full-drawer with stacked links and "Work With Us" CTA at bottom.
+**1.2 Lock down `ensureAdminUser`**
+Currently any visitor can POST and reset the admin password. Fix:
+- Require a server-side `ADMIN_BOOTSTRAP_TOKEN` (new secret) passed in the request body.
+- If the whitelisted email already has the admin role, refuse password reset via this endpoint — force the normal Supabase `resetPasswordForEmail` flow.
+- Only allow create-when-missing without token (true first-run), and only if zero admin users exist in `user_roles`.
 
-Footer:
-- Large neumorphic rounded card with 4 columns: brand/tagline, Connect (email + WhatsApp pills with Lucide icons), Our Links (Home/About Us/Services/Templates Shop/Portfolio/Careers), Follow Us (LinkedIn, Instagram, custom TikTok SVG only).
-- Bottom-center lime "Get a Free Consultation" CTA → `/contact`.
-- Copyright: © 2026 Capacitiq Solutions (Pty) Ltd.
+**1.3 Lock down `sendTemplateOrder`**
+Today it emails Canva links with no payment proof. Fix:
+- Rename to `fulfilTemplateOrder`.
+- Require a verified Yoco `chargeId` (or Paystack ref) parameter.
+- Server re-verifies the charge against Yoco's API using `YOCO_SECRET_KEY` before reading `canva_link` and emailing.
+- Old direct-call path removed from the checkout page.
 
-Home (/):
-- Remove B-BBEE pill from hero.
-- Hero copy + CTAs verbatim from spec; right column shows 3 neumorphic feature cards (Compass / PenTool / Megaphone).
-- Spotter strip with deep teal `#0b4650` background and lime CTA opening the shared Spotter modal.
-- Spotter modal fields + behavior per spec (success message replaces form, do not auto-close).
-- "What We Do" with 5 service cards (Compass / TrendingUp / Megaphone / Briefcase / PenTool), each linking to `/services#<id>`. No Sales pillar anywhere.
-- "Capacitiq Difference" comparison table card (full copy).
-- "How Our Pricing Works" — 4 step cards with ChevronRight separators.
-- Portfolio teaser (1 placeholder card + "View All Work").
-- From The Blog (3 placeholder cards + "Read All Posts").
-- Template Shop teaser (3 placeholder cards + "Browse All Templates").
-- FAQ accordion with all Q/A copy verbatim.
-- Ready to Start CTA section.
+**1.4 Protect `templates.canva_link` column**
+- Replace public RLS policy with a SQL `security_barrier` view `public_templates` exposing every column EXCEPT `canva_link`.
+- Revoke SELECT on `templates` from `anon`/`authenticated`, grant SELECT on the view.
+- Update all public reads (`_public.templates.tsx`, `_public.templates.$id.tsx`) to query the view.
 
-Services (/services):
-- Hero label/H1/body verbatim.
-- Pricing Guide section with gate modal (name/work email/optional company) → email lead via Resend + auto-download `/public/pricing-guide.pdf`.
-- 5 service pillars (ids: `business-strategy`, `marketing-growth`, `public-relations`, `virtual-assistance`, `graphic-design`) with numbers, taglines, deliverable checklists, and "Apply This To Your Business" CTAs.
-- Bottom CTA section.
+**1.5 `submissions` INSERT policy**
+Add `CREATE POLICY "Anyone can submit" ON submissions FOR INSERT TO anon, authenticated WITH CHECK (true);` — public forms currently insert via server fn with service-role, but a policy is required for direct supabase-js inserts and silences the linter.
 
-Contact (/contact):
-- Two-column layout. Left: full contact form with all sections (Your Details, Business Overview, Service Selection [now includes Web Presence], Budget & Timeline, additional notes, consent checkbox) wired to Resend → hello@capacitiq.co.za.
-- Right: contact info pills (WhatsApp 064 062 0354, email, LinkedIn, TikTok SVG, Instagram) + hours card (Mon–Fri 9–5, Sat/Sun closed).
+**1.6 SECURITY DEFINER review**
+`has_role` is fine (needed for RLS). Audit any others — revoke EXECUTE from `authenticated` where not needed.
 
-Careers (/careers):
-- Hero copy + 4 culture cards (Accountability, Clarity, Consistent Execution, Remote and Flexible).
-- Exactly two accordion role cards:
-  - Sales Spotter (OPEN) — Apply opens the SAME Spotter modal.
-  - Client Acquisition Specialist (CLOSED) — show muted "Applications Closed" pill, no Apply button.
+**1.7 Self-contained env — drop `LOVABLE_API_KEY` dependency**
+- `email.server.ts`: rewrite to call `https://api.resend.com/emails` directly with `Authorization: Bearer ${RESEND_API_KEY}`. Remove gateway URL and `LOVABLE_API_KEY` reference.
+- Server functions read only: `RESEND_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `YOCO_SECRET_KEY`, `ADMIN_BOOTSTRAP_TOKEN`.
 
-Company (/company):
-- Hero copy with registration details.
-- "Why businesses choose…" 3 cards (Who We Work With / What We Combine / How We Operate).
-- Philosophy, Vision, Mission blocks.
-- "How We Work" 5-step horizontal flow with arrows.
-- Company FAQ accordion (all Q/A verbatim).
-- Compliance section + 2 badge cards (B-BBEE Level 1, Reg No.) + Work With Us CTA.
+**1.8 Supabase client env fallback**
+`client.server.ts` is auto-generated and already reads `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` from `process.env`. The "Missing env var" admin-login error means `SUPABASE_SERVICE_ROLE_KEY` isn't set in the Lovable preview runtime (it IS in Vercel). Action: add `SUPABASE_SERVICE_ROLE_KEY` as a Lovable Cloud secret via `add_secret` so preview admin login works, AND keep code path env-only so Vercel deploy works unchanged.
 
-Templates / Portfolio / Blog: keep existing CMS-driven pages, restyled to match neumorphic spec; verify `canva_link` stays private.
+---
 
-SEO (every page):
-- `<html lang="en-ZA">`, unique title `[Page Name] | Capacitiq — Business Strategy, Design & Operations`, unique description, og:title/description/image/url, twitter:card=summary_large_image, canonical.
-- One H1 per page, descriptive alts, hero `loading="eager"` + others `loading="lazy"`.
-- robots.txt + sitemap.xml + JSON-LD: Organization (home), Article (blog posts), JobPosting (each open career).
+## Phase 2 — Yoco Custom Checkout
 
-### D. Validation
-- Confirm route tree generates; no duplicate `/` route.
-- Smoke-test admin login + password reset + each CRUD page.
-- Verify final checklist: no black, no white cards, logo is SVG image, no Sales pillar, shared Spotter modal, only 2 careers listings, only LinkedIn/TikTok/Instagram socials.
+- Add `<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js">` to `src/routes/__root.tsx` head.
+- New `src/components/CapacitiqPay.tsx`: neumorphic inset inputs (Cardholder Name, Card Number with 4-group format, MM/YY, CVV), Visa+Mastercard SVGs, lock icon + "Secured by Yoco" muted text, lime full-width `Pay R{amount}` button.
+- On submit calls `window.YocoSDK.createToken(...)`, then POSTs token to new server fn `chargeYocoToken` which hits `https://payments.yoco.com/api/charges/` with `YOCO_SECRET_KEY`.
+- On success → call `fulfilTemplateOrder` with the verified chargeId → email customer + hello@capacitiq.co.za with Canva links → clear cart → success card.
+- Error → neumorphic error card below form.
+- Requires secrets: `YOCO_SECRET_KEY` (request via add_secret).
+
+---
+
+## Phase 3 — Multi-step Contact Form
+
+Rewrite `src/routes/_public.contact.tsx`:
+- 4-step wizard with neumorphic pill progress indicator (lime when active).
+- Steps as specified: Your Details / Business Overview / Service Selection / Budget & Timeline.
+- Back link + Continue button on each step; final Submit button posts ALL collected fields to `submitContact` server fn → Resend → `hello@capacitiq.co.za` → success card replaces form.
+
+---
+
+## Phase 4 — Copy Fixes (verbatim)
+
+- `src/routes/_public.services.tsx`: full rewrite to spec (5 pillars w/ exact copy + Pricing Guide gate section + bottom CTA).
+- `src/routes/_public.company.tsx`: full rewrite (Why, Philosophy, Vision/Mission, How We Work 5-step, FAQ, Registered/Compliant).
+- `_public.index.tsx` FAQ: replace the logo/video answer with: "We currently do not create logos and video content as part of our Graphic Design pillar. We focus on static and document-based visual assets that support business positioning and execution."
+
+---
+
+## Phase 5 — Logo, Navbar, Footer
+
+- `Logo.tsx`: wrap `<img>` in a 44×44 dark-teal neumorphic container (`bg:#0b4650`, raised shadow, radius 10, padding 8). Text next to it reads **Solutions** (Ubuntu Bold, `#0b4650`). Entire pair wrapped in single `<Link to="/">`.
+- Update Navbar & Footer to use the new Logo (`showText`).
+
+---
+
+## Phase 6 — Legal Pages + CMS
+
+**6.1 Migration**: new `legal_pages` table.
+```
+id text primary key (slug: 'privacy-policy' | 'terms-of-service' | 'template-policy' | 'refund-policy' | 'cookie-policy')
+title text, effective_date date, content text (markdown),
+updated_at timestamptz default now()
+```
+RLS: public SELECT; admin ALL via `has_role`. Seed all 5 policies with the verbatim text from the prompt.
+
+**6.2 Public routes**: `/privacy-policy`, `/terms-of-service`, `/template-policy`, `/refund-policy`, `/cookie-policy` — render `content` as markdown (use `react-markdown`; install).
+
+**6.3 Footer**: add "Legal & More" column with 5 links.
+
+**6.4 Admin CMS**: `src/routes/admin.legal.tsx` — list 5 policies, each editable (title, effective_date, large textarea), Save button → `updateLegalPage` server fn (admin-only via auth middleware). Add to admin sidebar.
+
+**6.5 Sitemap**: include all 5 legal routes; exclude `/admin/*` and `/reset-password`.
+
+---
+
+## Phase 7 — Misc cleanup
+
+- **Cart/VAT**: in `src/lib/cart.ts` and checkout, remove any VAT/tax line. Show only Subtotal / `Shipping: FREE (Digital)` / Total.
+- **SEO**: trim homepage title (<60ch) + 5 longest meta descriptions (<160ch). Add JSON-LD: Organization on root, Article on blog posts, JobPosting on careers. Add `public/llms.txt` (one-paragraph site summary + key URLs). Add `<html lang="en-ZA">` confirmation.
+- **Cookie banner**: minimal neumorphic banner bottom-right; localStorage `capacitiq_cookies_ack`; links to `/cookie-policy`. No third-party CMP.
+
+---
+
+## Technical Details
+
+**New/changed server functions**
+- `admin-bootstrap.functions.ts` — add token gate + admin-exists check.
+- `email.server.ts` — direct Resend fetch, no gateway.
+- `forms.functions.ts` — rename `sendTemplateOrder` → `fulfilTemplateOrder` (chargeId-gated); keep `submitContact`, `submitSpotter`, `submitPricingGuide`, `submitCareerApplication` — each sends to the recipient table in the brief.
+- `yoco.functions.ts` (new) — `chargeYocoToken({ token, amount_cents, currency:'ZAR', metadata })`.
+- `content.functions.ts` — add `getLegalPage(slug)` (public) and `listLegalPages` / `updateLegalPage` (admin).
+
+**New secrets to request**: `YOCO_SECRET_KEY`, `ADMIN_BOOTSTRAP_TOKEN`, plus surfacing `SUPABASE_SERVICE_ROLE_KEY` in Lovable preview env.
+
+**Packages to add**: `react-markdown`.
+
+**Files affected (high-level)**: ~30 files across `src/routes`, `src/components`, `src/lib`, plus 2 migrations and seed insert.
+
+---
+
+## Validation checklist (runs after Phase 7)
+
+- `rg LOVABLE_API_KEY src/` returns nothing.
+- `ls CNAME public/CNAME` both fail.
+- Public REST query `GET /rest/v1/templates?select=canva_link` returns 401/403.
+- `ensureAdminUser` POST without token returns 401 when an admin already exists.
+- `fulfilTemplateOrder` without valid chargeId returns 402.
+- Contact form: 4 steps, submit reaches hello@capacitiq.co.za.
+- Admin can edit each legal page and changes show on the public route.
+- Cart: no VAT line.
+- Logo: lime SVG visible inside dark-teal pill on both navbar and footer; "Solutions" text; both clickable to `/`.
+- Services & Company pages match verbatim copy.
+- FAQ answer for logo/video updated.
+
+Reply **"approve"** to implement, or call out any item to adjust.
