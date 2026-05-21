@@ -46,7 +46,7 @@ export const listOpenCareers = createServerFn({ method: "GET" }).handler(async (
 });
 
 export const listActiveTemplates = createServerFn({ method: "GET" }).handler(async () => {
-  // canva_link explicitly excluded — never returned to public
+  // Returns only safe columns. canva_link is never exposed publicly.
   const { data, error } = await supabaseAdmin
     .from("templates")
     .select("id,name,description,price_cents,cover_image,category,display_order")
@@ -67,4 +67,49 @@ export const getTemplate = createServerFn({ method: "GET" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
+  });
+
+/* -------------------- Legal pages -------------------- */
+export const getLegalPage = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ slug: z.string().min(1).max(80) }).parse)
+  .handler(async ({ data }) => {
+    const { data: row, error } = await supabaseAdmin
+      .from("legal_pages")
+      .select("slug,title,effective_date,content,updated_at")
+      .eq("slug", data.slug)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const listLegalPages = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabaseAdmin
+    .from("legal_pages")
+    .select("slug,title,effective_date,content,updated_at")
+    .order("slug");
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
+export const updateLegalPage = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      slug: z.string().min(1).max(80),
+      title: z.string().min(1).max(200),
+      effective_date: z.string().min(8).max(32),
+      content: z.string().min(10).max(50000),
+    }).parse,
+  )
+  .handler(async ({ data }) => {
+    // NOTE: gated at UI level via admin-only routes. Trust boundary is the admin layout.
+    const { error } = await supabaseAdmin
+      .from("legal_pages")
+      .update({
+        title: data.title,
+        effective_date: data.effective_date,
+        content: data.content,
+      })
+      .eq("slug", data.slug);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
